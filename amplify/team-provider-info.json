@@ -1,0 +1,23 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-carnnetwork-dev-135442-authRole",
+      "UnauthRoleArn": "arn:aws:iam::162721372843:role/amplify-carnnetwork-dev-135442-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::162721372843:role/amplify-carnnetwork-dev-135442-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-carnnetwork-dev-135442-deployment",
+      "UnauthRoleName": "amplify-carnnetwork-dev-135442-unauthRole",
+      "StackName": "amplify-carnnetwork-dev-135442",
+      "StackId": "arn:aws:cloudformation:us-east-2:162721372843:stack/amplify-carnnetwork-dev-135442/7c4dd450-c1b9-11ee-925b-02f5a5b2f015",
+      "AmplifyAppId": "daveqbz9o5bu9"
+    },
+    "categories": {
+      "api": {
+        "carnnetwork": {}
+      },
+      "auth": {
+        "carnnetwork18c952f2": {}
+      }
+    }
+  }
+}
