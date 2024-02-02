@@ -11,7 +11,8 @@ import { listUsers } from "./graphql/queries";
 import { createUser } from "./graphql/mutations";
 import { Route, Routes } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
-import CarsPage from "./pages/CarsPage/CarsPage";
+import CarsStore from "./pages/CarsPage/CarsStore";
+import MyCars from "./pages/CarsPage/MyCars";
 import { Spin, message } from "antd";
 import { getCurrentUser } from "aws-amplify/auth";
 
@@ -90,9 +91,9 @@ export default function App() {
                       ?
                       <Routes>
                     <Route 
-                      path="/cars"  
+                      path="/carsStore"  
                       element={
-                        <CarsPage
+                        <CarsStore
                           playerInfo={playerInfo}
                           money={money}
                           setMoney={setMoney}  
@@ -108,8 +109,30 @@ export default function App() {
                           money={money} 
                           setMoney={setMoney}
                         />
+                        
                       }  
-                    />
+                        />
+                        <Route
+                      path="/myCars"
+                      element={
+                        <MyCars
+                          playerInfo={playerInfo}
+                          money={money} 
+                          setMoney={setMoney}
+                        />
+                        
+                      }  
+                        />
+                        <Route
+                      path="/auctions"
+                      element={
+                        <AuctionPage
+                          playerInfo={playerInfo}
+                          money={money} 
+                          setMoney={setMoney}
+                        />
+                      }  
+                        />
                       </Routes>
                       :
                       <Spin fullscreen/>

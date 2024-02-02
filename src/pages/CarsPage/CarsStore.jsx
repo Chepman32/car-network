@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Card, Button, Modal, Form, Input, message, Spin, Select } from "antd";
+import { Button, Modal, Form, Input, message, Select, Typography } from "antd";
 import { generateClient } from 'aws-amplify/api';
-import { listCars as listCarsQuery, getUserCars, getUser } from '../../graphql/queries';
+import { listCars as listCarsQuery } from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 import "./carsPage.css";
 import CarDetailsModal from "./CarDetailsModal";
 import CarCard from "./CarCard";
+import { fetchUserCarsRequest } from "../../functions";
 
 const { Option } = Select;
 const client = generateClient();
 
-const CarsPage = ({ playerInfo, setMoney, money }) => {
+const CarsStore = ({ playerInfo, setMoney, money }) => {
   const [cars, setCars] = useState([]);
   const [visible, setVisible] = useState(false);
   const [loadingBuy, setLoadingBuy] = useState(false);
@@ -27,39 +28,11 @@ const CarsPage = ({ playerInfo, setMoney, money }) => {
     }
   }, []);
 
-  const fetchUserCars = useCallback(async () => {
-    try {
-      const userData = await client.graphql({
-        query: `
-          query GetUser($id: ID!) {
-            getUser(id: $id) {
-              cars {
-                items {
-                  id
-                }
-              }
-            }
-          }
-        `,
-        variables: {
-          id: playerInfo.id,
-        },
-      });
-  
-      setCars(userData.data.getUser.Cars.items);
-    } catch (error) {
-      console.error("Error fetching user's cars:", error);
-    }
-  }, []);
-  
-  
-  
-  
-  
-  
-
   useEffect(() => {
-    fetchCars();
+    async function fetchUserCars() {
+      await fetchCars()
+    }
+    fetchUserCars()
   }, [fetchCars]);
 
   const buyCar = async (car) => {
@@ -84,7 +57,7 @@ const CarsPage = ({ playerInfo, setMoney, money }) => {
           variables: {
             input: {
               userId: playerInfo.id,
-              carId: car.id, // Assuming the car object has an 'id' property
+              carId: car.id,
             },
           },
         });
@@ -141,13 +114,13 @@ const CarsPage = ({ playerInfo, setMoney, money }) => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <Button type="primary" onClick={fetchUserCars} style={{ marginBottom: '20px' }}>
+      <Button type="primary" onClick={showModal} style={{ marginBottom: '20px' }}>
         Create New Car
       </Button>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: "wrap" }}>
-        {cars.map((car) => (
+        {cars.length ? cars.map((car) => (
           <CarCard selectedCar={selectedCar} setSelectedCar={setSelectedCar} showCarDetailsModal={showCarDetailsModal} car={car} getImageSource={getImageSource}/>
-        ))}
+        )) : <Typography.Title>You have no cars</Typography.Title>}
       </div>
 
       <Modal
@@ -206,4 +179,4 @@ const CarsPage = ({ playerInfo, setMoney, money }) => {
   );
 };
 
-export default CarsPage;
+export default CarsStore;
