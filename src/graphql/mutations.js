@@ -10,6 +10,10 @@ export const createUser = /* GraphQL */ `
       id
       nickname
       money
+      cars {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -25,6 +29,10 @@ export const updateUser = /* GraphQL */ `
       id
       nickname
       money
+      cars {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -40,6 +48,10 @@ export const deleteUser = /* GraphQL */ `
       id
       nickname
       money
+      cars {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -121,6 +133,10 @@ export const createCar = /* GraphQL */ `
       year
       price
       type
+      users {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -139,6 +155,10 @@ export const updateCar = /* GraphQL */ `
       year
       price
       type
+      users {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -157,6 +177,112 @@ export const deleteCar = /* GraphQL */ `
       year
       price
       type
+      users {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const createUserCar = /* GraphQL */ `
+  mutation CreateUserCar(
+    $input: CreateUserCarInput!
+    $condition: ModelUserCarConditionInput
+  ) {
+    createUserCar(input: $input, condition: $condition) {
+      id
+      userId
+      carId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      car {
+        id
+        make
+        model
+        year
+        price
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const updateUserCar = /* GraphQL */ `
+  mutation UpdateUserCar(
+    $input: UpdateUserCarInput!
+    $condition: ModelUserCarConditionInput
+  ) {
+    updateUserCar(input: $input, condition: $condition) {
+      id
+      userId
+      carId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      car {
+        id
+        make
+        model
+        year
+        price
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const deleteUserCar = /* GraphQL */ `
+  mutation DeleteUserCar(
+    $input: DeleteUserCarInput!
+    $condition: ModelUserCarConditionInput
+  ) {
+    deleteUserCar(input: $input, condition: $condition) {
+      id
+      userId
+      carId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      car {
+        id
+        make
+        model
+        year
+        price
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename

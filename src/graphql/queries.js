@@ -7,6 +7,10 @@ export const getUser = /* GraphQL */ `
       id
       nickname
       money
+      cars {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -86,6 +90,10 @@ export const getCar = /* GraphQL */ `
       year
       price
       type
+      users {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -106,6 +114,113 @@ export const listCars = /* GraphQL */ `
         year
         price
         type
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getUserCar = /* GraphQL */ `
+  query GetUserCar($id: ID!) {
+    getUserCar(id: $id) {
+      id
+      userId
+      carId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      car {
+        id
+        make
+        model
+        year
+        price
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listUserCars = /* GraphQL */ `
+  query ListUserCars(
+    $filter: ModelUserCarFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listUserCars(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        carId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const userCarsByUserId = /* GraphQL */ `
+  query UserCarsByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserCarFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userCarsByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        carId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const userCarsByCarId = /* GraphQL */ `
+  query UserCarsByCarId(
+    $carId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelUserCarFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    userCarsByCarId(
+      carId: $carId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        carId
         createdAt
         updatedAt
         __typename

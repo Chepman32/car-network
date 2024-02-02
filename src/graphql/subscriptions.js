@@ -7,6 +7,10 @@ export const onCreateUser = /* GraphQL */ `
       id
       nickname
       money
+      cars {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -19,6 +23,10 @@ export const onUpdateUser = /* GraphQL */ `
       id
       nickname
       money
+      cars {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -31,6 +39,10 @@ export const onDeleteUser = /* GraphQL */ `
       id
       nickname
       money
+      cars {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -100,6 +112,10 @@ export const onCreateCar = /* GraphQL */ `
       year
       price
       type
+      users {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -115,6 +131,10 @@ export const onUpdateCar = /* GraphQL */ `
       year
       price
       type
+      users {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -130,6 +150,103 @@ export const onDeleteCar = /* GraphQL */ `
       year
       price
       type
+      users {
+        nextToken
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateUserCar = /* GraphQL */ `
+  subscription OnCreateUserCar($filter: ModelSubscriptionUserCarFilterInput) {
+    onCreateUserCar(filter: $filter) {
+      id
+      userId
+      carId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      car {
+        id
+        make
+        model
+        year
+        price
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateUserCar = /* GraphQL */ `
+  subscription OnUpdateUserCar($filter: ModelSubscriptionUserCarFilterInput) {
+    onUpdateUserCar(filter: $filter) {
+      id
+      userId
+      carId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      car {
+        id
+        make
+        model
+        year
+        price
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteUserCar = /* GraphQL */ `
+  subscription OnDeleteUserCar($filter: ModelSubscriptionUserCarFilterInput) {
+    onDeleteUserCar(filter: $filter) {
+      id
+      userId
+      carId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      car {
+        id
+        make
+        model
+        year
+        price
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
       createdAt
       updatedAt
       __typename

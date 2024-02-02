@@ -27,27 +27,22 @@ const CarsPage = ({ playerInfo, setMoney, money }) => {
     }
   }, []);
 
-  const fetchUserCars = useCallback(async (userId) => {
+  const fetchUserCars = useCallback(async () => {
     try {
       const userData = await client.graphql({
         query: `
           query GetUser($id: ID!) {
             getUser(id: $id) {
-              Cars {
+              cars {
                 items {
                   id
-                  make
-                  model
-                  year
-                  price
-                  type
                 }
               }
             }
           }
         `,
         variables: {
-          id: userId,
+          id: playerInfo.id,
         },
       });
   
@@ -68,7 +63,41 @@ const CarsPage = ({ playerInfo, setMoney, money }) => {
   }, [fetchCars]);
 
   const buyCar = async (car) => {
-    
+    if (playerInfo && playerInfo.id) {
+      setMoney(money - car.price);
+      try {
+        setLoadingBuy(true);
+
+        await client.graphql({
+          query: mutations.updateUser,
+          variables: {
+            input: {
+              id: playerInfo.id,
+              money: money - car.price,
+            },
+          },
+        });
+
+        // Create a new user-car association
+        await client.graphql({
+          query: mutations.createUserCar,
+          variables: {
+            input: {
+              userId: playerInfo.id,
+              carId: car.id, // Assuming the car object has an 'id' property
+            },
+          },
+        });
+
+        message.success('Car successfully bought!');
+      } catch (err) {
+        console.log(err);
+        message.error('Error buying car');
+      } finally {
+        setLoadingBuy(false);
+        setSelectedCar(null);
+      }
+    }
   };
 
   const showModal = () => {
@@ -112,7 +141,7 @@ const CarsPage = ({ playerInfo, setMoney, money }) => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <Button type="primary" onClick={showModal} style={{ marginBottom: '20px' }}>
+      <Button type="primary" onClick={fetchUserCars} style={{ marginBottom: '20px' }}>
         Create New Car
       </Button>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: "wrap" }}>
