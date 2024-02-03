@@ -17,6 +17,8 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
   const [visible, setVisible] = useState(false);
   const [newAuctionvisible, setNewAuctionVisible] = useState(false);
   const [auctionDuration, setAuctionDuration] = useState(1);
+  const [minBid, setMinBid] = useState(0);
+  const [buy, setBuy] = useState(0)
   const [loadingBuy, setLoadingBuy] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
   const [carDetailsVisible, setCarDetailsVisible] = useState(false);
@@ -77,34 +79,39 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
     }
   };
 
-  async function createNewAuction() {
-    try {
-      const formData = form.getFieldsValue();
+  const createNewAuction = async () => {
       const auctionDurationSeconds = auctionDuration * 60 * 60;
       const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-
       const endTime = currentTimeInSeconds + auctionDurationSeconds;
 
       const newAuction = {
-        carName: formData.carName,
-        player: playerInfo.nickname,
-        buy: formData.buy,
-        minBid: formData.minBid,
-        currentBid: formData.minBid,
-        endTime: endTime,
-        status: "active",
+        make: selectedCar.make,
+        model: selectedCar.model,
+        year: selectedCar.year,
+        type: selectedCar.type,
+    currentBid: 0,
+    endTime,
+    status: 'Active',
+    lastBidPlayer: '',
+    player: playerInfo.nickname,
+    buy,
+    minBid,
       };
-
-      await client.graphql({
+    try {
+      const result = await client.graphql({
         query: mutations.createAuction,
-        variables: { input: newAuction },
+        variables: {
+          input: newAuction,
+        },
       });
-      setNewAuctionVisible(false);
+  
+      console.log('New auction created:', result.data.createAuction);
+      message.success('Auction created successfully!');
     } catch (error) {
-      console.error('Error creating a new auction', error);
+      console.error('Error creating auction:', error);
     }
-  }
-
+  };
+  
   const showModal = () => {
     setVisible(true);
   };
@@ -132,6 +139,7 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
 
   return (
     <div style={{ padding: '20px' }}>
+      <h2 onClick={() => console.log(selectedCar)}>selected car</h2>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: "wrap" }}>
         {cars.length ? cars.map((car) => (
           <CarCard selectedCar={selectedCar} setSelectedCar={setSelectedCar} showCarDetailsModal={showCarDetailsModal} car={car.car} getImageSource={getImageSource}/>
@@ -154,6 +162,10 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
         handleCancel={cancelNewAuction}
         handleOk={createNewAuction}
         form={form}
+        minBid={minBid}
+        setMinBid={setMinBid}
+        buy={buy}
+        setBuy={setBuy}
         auctionDuration={auctionDuration}
         setAuctionDuration={setAuctionDuration}
         userCars={cars}

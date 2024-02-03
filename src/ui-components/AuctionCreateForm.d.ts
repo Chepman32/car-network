@@ -22,36 +22,45 @@ export declare type ValidationResponse = {
 };
 export declare type ValidationFunction<T> = (value: T, validationResponse: ValidationResponse) => ValidationResponse | Promise<ValidationResponse>;
 export declare type AuctionCreateFormInputValues = {
-    carName?: string;
-    player?: string;
-    buy?: number;
-    minBid?: number;
+    make?: string;
+    model?: string;
+    year?: number;
+    type?: string;
     currentBid?: number;
     endTime?: string;
     status?: string;
     lastBidPlayer?: string;
+    player?: string;
+    buy?: number;
+    minBid?: number;
 };
 export declare type AuctionCreateFormValidationValues = {
-    carName?: ValidationFunction<string>;
-    player?: ValidationFunction<string>;
-    buy?: ValidationFunction<number>;
-    minBid?: ValidationFunction<number>;
+    make?: ValidationFunction<string>;
+    model?: ValidationFunction<string>;
+    year?: ValidationFunction<number>;
+    type?: ValidationFunction<string>;
     currentBid?: ValidationFunction<number>;
     endTime?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
     lastBidPlayer?: ValidationFunction<string>;
+    player?: ValidationFunction<string>;
+    buy?: ValidationFunction<number>;
+    minBid?: ValidationFunction<number>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type AuctionCreateFormOverridesProps = {
     AuctionCreateFormGrid?: PrimitiveOverrideProps<GridProps>;
-    carName?: PrimitiveOverrideProps<TextFieldProps>;
-    player?: PrimitiveOverrideProps<TextFieldProps>;
-    buy?: PrimitiveOverrideProps<TextFieldProps>;
-    minBid?: PrimitiveOverrideProps<TextFieldProps>;
+    make?: PrimitiveOverrideProps<TextFieldProps>;
+    model?: PrimitiveOverrideProps<TextFieldProps>;
+    year?: PrimitiveOverrideProps<TextFieldProps>;
+    type?: PrimitiveOverrideProps<TextFieldProps>;
     currentBid?: PrimitiveOverrideProps<TextFieldProps>;
     endTime?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<TextFieldProps>;
     lastBidPlayer?: PrimitiveOverrideProps<TextFieldProps>;
+    player?: PrimitiveOverrideProps<TextFieldProps>;
+    buy?: PrimitiveOverrideProps<TextFieldProps>;
+    minBid?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type AuctionCreateFormProps = React.PropsWithChildren<{
     overrides?: AuctionCreateFormOverridesProps | undefined | null;

@@ -3,7 +3,7 @@ import React from 'react';
 
 const { Option } = Select;
 
-export default function NewAuctionModal({ visible, handleCancel, handleOk, selectedCar, setSelectedCar, setAuctionDuration, auctionDuration }) {
+export default function NewAuctionModal({ visible, handleCancel, handleOk, selectedCar, setSelectedCar, buy, setBuy,minBid, setMinBid, setAuctionDuration, auctionDuration }) {
   const [form] = Form.useForm();
 
   return (
@@ -13,18 +13,15 @@ export default function NewAuctionModal({ visible, handleCancel, handleOk, selec
       title="Create a New Auction"
       okText="Create"
       cancelText="Cancel"
-      onCancel={handleCancel}  // Ensure that onCancel is assigned to handleCancel
+      onCancel={handleCancel}
       onOk={handleOk}
     >
       <Form form={form} layout="vertical">
-        <Form.Item name="carName" label="Car Name" rules={[{ required: true }]}>
-          <Input />
-        </Form.Item>
         <Form.Item name="minBid" label="Minimal bid" rules={[{ required: true }]}>
-          <Input type="number" defaultValue={0} />
+          <Input type="number" defaultValue={0} value={minBid} onChange={(event) => setMinBid(event.target.value)} />
         </Form.Item>
         <Form.Item name="buy" label="Buy" rules={[{ required: true }]}>
-          <Input type="number" defaultValue={0} />
+          <Input type="number" defaultValue={0} value={buy} onChange={(event) => setBuy(event.target.value)} />
         </Form.Item>
         <Form.Item name="auctionDuration" label="Auction Duration (hours)" rules={[{ required: true }]}>
           <Select value={auctionDuration} onChange={(value) => setAuctionDuration(value)}>
@@ -35,7 +32,8 @@ export default function NewAuctionModal({ visible, handleCancel, handleOk, selec
             <Option value={24}>24 hours</Option>
           </Select>
               </Form.Item>
-      </Form>
+          </Form>
+          <h2 onClick={() => console.log(minBid)}>Values</h2>
     </Modal>
   );
 }

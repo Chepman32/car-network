@@ -1,11 +1,8 @@
 import { Flex } from 'antd'
-import React, { useEffect } from 'react'
+import React from 'react'
 import "./carsPage.css";
 
 export default function CarCard({ selectedCar, setSelectedCar, showCarDetailsModal, car, getImageSource }) {
-  useEffect(() => {
-    console.log(car)
-  }, [])
   return (
     <div
             key={car.id}

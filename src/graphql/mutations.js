@@ -65,14 +65,17 @@ export const createAuction = /* GraphQL */ `
   ) {
     createAuction(input: $input, condition: $condition) {
       id
-      carName
-      player
-      buy
-      minBid
+      make
+      model
+      year
+      type
       currentBid
       endTime
       status
       lastBidPlayer
+      player
+      buy
+      minBid
       createdAt
       updatedAt
       __typename
@@ -86,14 +89,17 @@ export const updateAuction = /* GraphQL */ `
   ) {
     updateAuction(input: $input, condition: $condition) {
       id
-      carName
-      player
-      buy
-      minBid
+      make
+      model
+      year
+      type
       currentBid
       endTime
       status
       lastBidPlayer
+      player
+      buy
+      minBid
       createdAt
       updatedAt
       __typename
@@ -107,14 +113,17 @@ export const deleteAuction = /* GraphQL */ `
   ) {
     deleteAuction(input: $input, condition: $condition) {
       id
-      carName
-      player
-      buy
-      minBid
+      make
+      model
+      year
+      type
       currentBid
       endTime
       status
       lastBidPlayer
+      player
+      buy
+      minBid
       createdAt
       updatedAt
       __typename

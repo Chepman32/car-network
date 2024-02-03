@@ -41,14 +41,17 @@ export const getAuction = /* GraphQL */ `
   query GetAuction($id: ID!) {
     getAuction(id: $id) {
       id
-      carName
-      player
-      buy
-      minBid
+      make
+      model
+      year
+      type
       currentBid
       endTime
       status
       lastBidPlayer
+      player
+      buy
+      minBid
       createdAt
       updatedAt
       __typename
@@ -64,14 +67,17 @@ export const listAuctions = /* GraphQL */ `
     listAuctions(filter: $filter, limit: $limit, nextToken: $nextToken) {
       items {
         id
-        carName
-        player
-        buy
-        minBid
+        make
+        model
+        year
+        type
         currentBid
         endTime
         status
         lastBidPlayer
+        player
+        buy
+        minBid
         createdAt
         updatedAt
         __typename

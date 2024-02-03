@@ -23,46 +23,58 @@ export default function AuctionCreateForm(props) {
     ...rest
   } = props;
   const initialValues = {
-    carName: "",
-    player: "",
-    buy: "",
-    minBid: "",
+    make: "",
+    model: "",
+    year: "",
+    type: "",
     currentBid: "",
     endTime: "",
     status: "",
     lastBidPlayer: "",
+    player: "",
+    buy: "",
+    minBid: "",
   };
-  const [carName, setCarName] = React.useState(initialValues.carName);
-  const [player, setPlayer] = React.useState(initialValues.player);
-  const [buy, setBuy] = React.useState(initialValues.buy);
-  const [minBid, setMinBid] = React.useState(initialValues.minBid);
+  const [make, setMake] = React.useState(initialValues.make);
+  const [model, setModel] = React.useState(initialValues.model);
+  const [year, setYear] = React.useState(initialValues.year);
+  const [type, setType] = React.useState(initialValues.type);
   const [currentBid, setCurrentBid] = React.useState(initialValues.currentBid);
   const [endTime, setEndTime] = React.useState(initialValues.endTime);
   const [status, setStatus] = React.useState(initialValues.status);
   const [lastBidPlayer, setLastBidPlayer] = React.useState(
     initialValues.lastBidPlayer
   );
+  const [player, setPlayer] = React.useState(initialValues.player);
+  const [buy, setBuy] = React.useState(initialValues.buy);
+  const [minBid, setMinBid] = React.useState(initialValues.minBid);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
-    setCarName(initialValues.carName);
-    setPlayer(initialValues.player);
-    setBuy(initialValues.buy);
-    setMinBid(initialValues.minBid);
+    setMake(initialValues.make);
+    setModel(initialValues.model);
+    setYear(initialValues.year);
+    setType(initialValues.type);
     setCurrentBid(initialValues.currentBid);
     setEndTime(initialValues.endTime);
     setStatus(initialValues.status);
     setLastBidPlayer(initialValues.lastBidPlayer);
+    setPlayer(initialValues.player);
+    setBuy(initialValues.buy);
+    setMinBid(initialValues.minBid);
     setErrors({});
   };
   const validations = {
-    carName: [{ type: "Required" }],
-    player: [{ type: "Required" }],
-    buy: [{ type: "Required" }],
-    minBid: [{ type: "Required" }],
+    make: [{ type: "Required" }],
+    model: [{ type: "Required" }],
+    year: [],
+    type: [{ type: "Required" }],
     currentBid: [],
     endTime: [{ type: "Required" }],
     status: [{ type: "Required" }],
     lastBidPlayer: [],
+    player: [{ type: "Required" }],
+    buy: [{ type: "Required" }],
+    minBid: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -90,14 +102,17 @@ export default function AuctionCreateForm(props) {
       onSubmit={async (event) => {
         event.preventDefault();
         let modelFields = {
-          carName,
-          player,
-          buy,
-          minBid,
+          make,
+          model,
+          year,
+          type,
           currentBid,
           endTime,
           status,
           lastBidPlayer,
+          player,
+          buy,
+          minBid,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -152,35 +167,284 @@ export default function AuctionCreateForm(props) {
       {...rest}
     >
       <TextField
-        label="Car name"
+        label="Make"
         isRequired={true}
         isReadOnly={false}
-        value={carName}
+        value={make}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              carName: value,
-              player,
-              buy,
-              minBid,
+              make: value,
+              model,
+              year,
+              type,
               currentBid,
               endTime,
               status,
               lastBidPlayer,
+              player,
+              buy,
+              minBid,
             };
             const result = onChange(modelFields);
-            value = result?.carName ?? value;
+            value = result?.make ?? value;
           }
-          if (errors.carName?.hasError) {
-            runValidationTasks("carName", value);
+          if (errors.make?.hasError) {
+            runValidationTasks("make", value);
           }
-          setCarName(value);
+          setMake(value);
         }}
-        onBlur={() => runValidationTasks("carName", carName)}
-        errorMessage={errors.carName?.errorMessage}
-        hasError={errors.carName?.hasError}
-        {...getOverrideProps(overrides, "carName")}
+        onBlur={() => runValidationTasks("make", make)}
+        errorMessage={errors.make?.errorMessage}
+        hasError={errors.make?.hasError}
+        {...getOverrideProps(overrides, "make")}
+      ></TextField>
+      <TextField
+        label="Model"
+        isRequired={true}
+        isReadOnly={false}
+        value={model}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              make,
+              model: value,
+              year,
+              type,
+              currentBid,
+              endTime,
+              status,
+              lastBidPlayer,
+              player,
+              buy,
+              minBid,
+            };
+            const result = onChange(modelFields);
+            value = result?.model ?? value;
+          }
+          if (errors.model?.hasError) {
+            runValidationTasks("model", value);
+          }
+          setModel(value);
+        }}
+        onBlur={() => runValidationTasks("model", model)}
+        errorMessage={errors.model?.errorMessage}
+        hasError={errors.model?.hasError}
+        {...getOverrideProps(overrides, "model")}
+      ></TextField>
+      <TextField
+        label="Year"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={year}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              make,
+              model,
+              year: value,
+              type,
+              currentBid,
+              endTime,
+              status,
+              lastBidPlayer,
+              player,
+              buy,
+              minBid,
+            };
+            const result = onChange(modelFields);
+            value = result?.year ?? value;
+          }
+          if (errors.year?.hasError) {
+            runValidationTasks("year", value);
+          }
+          setYear(value);
+        }}
+        onBlur={() => runValidationTasks("year", year)}
+        errorMessage={errors.year?.errorMessage}
+        hasError={errors.year?.hasError}
+        {...getOverrideProps(overrides, "year")}
+      ></TextField>
+      <TextField
+        label="Type"
+        isRequired={true}
+        isReadOnly={false}
+        value={type}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              make,
+              model,
+              year,
+              type: value,
+              currentBid,
+              endTime,
+              status,
+              lastBidPlayer,
+              player,
+              buy,
+              minBid,
+            };
+            const result = onChange(modelFields);
+            value = result?.type ?? value;
+          }
+          if (errors.type?.hasError) {
+            runValidationTasks("type", value);
+          }
+          setType(value);
+        }}
+        onBlur={() => runValidationTasks("type", type)}
+        errorMessage={errors.type?.errorMessage}
+        hasError={errors.type?.hasError}
+        {...getOverrideProps(overrides, "type")}
+      ></TextField>
+      <TextField
+        label="Current bid"
+        isRequired={false}
+        isReadOnly={false}
+        type="number"
+        step="any"
+        value={currentBid}
+        onChange={(e) => {
+          let value = isNaN(parseInt(e.target.value))
+            ? e.target.value
+            : parseInt(e.target.value);
+          if (onChange) {
+            const modelFields = {
+              make,
+              model,
+              year,
+              type,
+              currentBid: value,
+              endTime,
+              status,
+              lastBidPlayer,
+              player,
+              buy,
+              minBid,
+            };
+            const result = onChange(modelFields);
+            value = result?.currentBid ?? value;
+          }
+          if (errors.currentBid?.hasError) {
+            runValidationTasks("currentBid", value);
+          }
+          setCurrentBid(value);
+        }}
+        onBlur={() => runValidationTasks("currentBid", currentBid)}
+        errorMessage={errors.currentBid?.errorMessage}
+        hasError={errors.currentBid?.hasError}
+        {...getOverrideProps(overrides, "currentBid")}
+      ></TextField>
+      <TextField
+        label="End time"
+        isRequired={true}
+        isReadOnly={false}
+        value={endTime}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              make,
+              model,
+              year,
+              type,
+              currentBid,
+              endTime: value,
+              status,
+              lastBidPlayer,
+              player,
+              buy,
+              minBid,
+            };
+            const result = onChange(modelFields);
+            value = result?.endTime ?? value;
+          }
+          if (errors.endTime?.hasError) {
+            runValidationTasks("endTime", value);
+          }
+          setEndTime(value);
+        }}
+        onBlur={() => runValidationTasks("endTime", endTime)}
+        errorMessage={errors.endTime?.errorMessage}
+        hasError={errors.endTime?.hasError}
+        {...getOverrideProps(overrides, "endTime")}
+      ></TextField>
+      <TextField
+        label="Status"
+        isRequired={true}
+        isReadOnly={false}
+        value={status}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              make,
+              model,
+              year,
+              type,
+              currentBid,
+              endTime,
+              status: value,
+              lastBidPlayer,
+              player,
+              buy,
+              minBid,
+            };
+            const result = onChange(modelFields);
+            value = result?.status ?? value;
+          }
+          if (errors.status?.hasError) {
+            runValidationTasks("status", value);
+          }
+          setStatus(value);
+        }}
+        onBlur={() => runValidationTasks("status", status)}
+        errorMessage={errors.status?.errorMessage}
+        hasError={errors.status?.hasError}
+        {...getOverrideProps(overrides, "status")}
+      ></TextField>
+      <TextField
+        label="Last bid player"
+        isRequired={false}
+        isReadOnly={false}
+        value={lastBidPlayer}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              make,
+              model,
+              year,
+              type,
+              currentBid,
+              endTime,
+              status,
+              lastBidPlayer: value,
+              player,
+              buy,
+              minBid,
+            };
+            const result = onChange(modelFields);
+            value = result?.lastBidPlayer ?? value;
+          }
+          if (errors.lastBidPlayer?.hasError) {
+            runValidationTasks("lastBidPlayer", value);
+          }
+          setLastBidPlayer(value);
+        }}
+        onBlur={() => runValidationTasks("lastBidPlayer", lastBidPlayer)}
+        errorMessage={errors.lastBidPlayer?.errorMessage}
+        hasError={errors.lastBidPlayer?.hasError}
+        {...getOverrideProps(overrides, "lastBidPlayer")}
       ></TextField>
       <TextField
         label="Player"
@@ -191,14 +455,17 @@ export default function AuctionCreateForm(props) {
           let { value } = e.target;
           if (onChange) {
             const modelFields = {
-              carName,
-              player: value,
-              buy,
-              minBid,
+              make,
+              model,
+              year,
+              type,
               currentBid,
               endTime,
               status,
               lastBidPlayer,
+              player: value,
+              buy,
+              minBid,
             };
             const result = onChange(modelFields);
             value = result?.player ?? value;
@@ -226,14 +493,17 @@ export default function AuctionCreateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
-              carName,
-              player,
-              buy: value,
-              minBid,
+              make,
+              model,
+              year,
+              type,
               currentBid,
               endTime,
               status,
               lastBidPlayer,
+              player,
+              buy: value,
+              minBid,
             };
             const result = onChange(modelFields);
             value = result?.buy ?? value;
@@ -261,14 +531,17 @@ export default function AuctionCreateForm(props) {
             : parseInt(e.target.value);
           if (onChange) {
             const modelFields = {
-              carName,
-              player,
-              buy,
-              minBid: value,
+              make,
+              model,
+              year,
+              type,
               currentBid,
               endTime,
               status,
               lastBidPlayer,
+              player,
+              buy,
+              minBid: value,
             };
             const result = onChange(modelFields);
             value = result?.minBid ?? value;
@@ -282,134 +555,6 @@ export default function AuctionCreateForm(props) {
         errorMessage={errors.minBid?.errorMessage}
         hasError={errors.minBid?.hasError}
         {...getOverrideProps(overrides, "minBid")}
-      ></TextField>
-      <TextField
-        label="Current bid"
-        isRequired={false}
-        isReadOnly={false}
-        type="number"
-        step="any"
-        value={currentBid}
-        onChange={(e) => {
-          let value = isNaN(parseInt(e.target.value))
-            ? e.target.value
-            : parseInt(e.target.value);
-          if (onChange) {
-            const modelFields = {
-              carName,
-              player,
-              buy,
-              minBid,
-              currentBid: value,
-              endTime,
-              status,
-              lastBidPlayer,
-            };
-            const result = onChange(modelFields);
-            value = result?.currentBid ?? value;
-          }
-          if (errors.currentBid?.hasError) {
-            runValidationTasks("currentBid", value);
-          }
-          setCurrentBid(value);
-        }}
-        onBlur={() => runValidationTasks("currentBid", currentBid)}
-        errorMessage={errors.currentBid?.errorMessage}
-        hasError={errors.currentBid?.hasError}
-        {...getOverrideProps(overrides, "currentBid")}
-      ></TextField>
-      <TextField
-        label="End time"
-        isRequired={true}
-        isReadOnly={false}
-        value={endTime}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              carName,
-              player,
-              buy,
-              minBid,
-              currentBid,
-              endTime: value,
-              status,
-              lastBidPlayer,
-            };
-            const result = onChange(modelFields);
-            value = result?.endTime ?? value;
-          }
-          if (errors.endTime?.hasError) {
-            runValidationTasks("endTime", value);
-          }
-          setEndTime(value);
-        }}
-        onBlur={() => runValidationTasks("endTime", endTime)}
-        errorMessage={errors.endTime?.errorMessage}
-        hasError={errors.endTime?.hasError}
-        {...getOverrideProps(overrides, "endTime")}
-      ></TextField>
-      <TextField
-        label="Status"
-        isRequired={true}
-        isReadOnly={false}
-        value={status}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              carName,
-              player,
-              buy,
-              minBid,
-              currentBid,
-              endTime,
-              status: value,
-              lastBidPlayer,
-            };
-            const result = onChange(modelFields);
-            value = result?.status ?? value;
-          }
-          if (errors.status?.hasError) {
-            runValidationTasks("status", value);
-          }
-          setStatus(value);
-        }}
-        onBlur={() => runValidationTasks("status", status)}
-        errorMessage={errors.status?.errorMessage}
-        hasError={errors.status?.hasError}
-        {...getOverrideProps(overrides, "status")}
-      ></TextField>
-      <TextField
-        label="Last bid player"
-        isRequired={false}
-        isReadOnly={false}
-        value={lastBidPlayer}
-        onChange={(e) => {
-          let { value } = e.target;
-          if (onChange) {
-            const modelFields = {
-              carName,
-              player,
-              buy,
-              minBid,
-              currentBid,
-              endTime,
-              status,
-              lastBidPlayer: value,
-            };
-            const result = onChange(modelFields);
-            value = result?.lastBidPlayer ?? value;
-          }
-          if (errors.lastBidPlayer?.hasError) {
-            runValidationTasks("lastBidPlayer", value);
-          }
-          setLastBidPlayer(value);
-        }}
-        onBlur={() => runValidationTasks("lastBidPlayer", lastBidPlayer)}
-        errorMessage={errors.lastBidPlayer?.errorMessage}
-        hasError={errors.lastBidPlayer?.hasError}
-        {...getOverrideProps(overrides, "lastBidPlayer")}
       ></TextField>
       <Flex
         justifyContent="space-between"

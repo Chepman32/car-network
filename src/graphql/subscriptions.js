@@ -53,14 +53,17 @@ export const onCreateAuction = /* GraphQL */ `
   subscription OnCreateAuction($filter: ModelSubscriptionAuctionFilterInput) {
     onCreateAuction(filter: $filter) {
       id
-      carName
-      player
-      buy
-      minBid
+      make
+      model
+      year
+      type
       currentBid
       endTime
       status
       lastBidPlayer
+      player
+      buy
+      minBid
       createdAt
       updatedAt
       __typename
@@ -71,14 +74,17 @@ export const onUpdateAuction = /* GraphQL */ `
   subscription OnUpdateAuction($filter: ModelSubscriptionAuctionFilterInput) {
     onUpdateAuction(filter: $filter) {
       id
-      carName
-      player
-      buy
-      minBid
+      make
+      model
+      year
+      type
       currentBid
       endTime
       status
       lastBidPlayer
+      player
+      buy
+      minBid
       createdAt
       updatedAt
       __typename
@@ -89,14 +95,17 @@ export const onDeleteAuction = /* GraphQL */ `
   subscription OnDeleteAuction($filter: ModelSubscriptionAuctionFilterInput) {
     onDeleteAuction(filter: $filter) {
       id
-      carName
-      player
-      buy
-      minBid
+      make
+      model
+      year
+      type
       currentBid
       endTime
       status
       lastBidPlayer
+      player
+      buy
+      minBid
       createdAt
       updatedAt
       __typename
