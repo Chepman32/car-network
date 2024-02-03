@@ -5,17 +5,20 @@ import { Modal, Form, Input, Button, Card, Col, Row, Typography, Flex, Select, m
 import { generateClient } from 'aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import { listAuctions as listAuctionsQuery } from '../../graphql/queries';
-import { calculateTimeDifference } from "../../functions";
+import { calculateTimeDifference, fetchUserCarsRequest } from "../../functions";
 import AuctionPageItem from "./AuctionPageItem";
 import { SelectedAuctionDetails } from "./SelectedAuctionDetails";
 import AuctionActionsModal from "./AuctionActionsModal";
+import NewAuctionModal from "./NewAuctionModal";
 
 const { Option } = Select;
 const client = generateClient();
 
 export default function AuctionPage({ playerInfo, setMoney, money }) {
   const [auctions, setAuctions] = useState([]);
+  const [userCars, setUserCars] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [selectedCar, setSelectedCar] = useState(null);
   const [auctionDuration, setAuctionDuration] = useState(1);
   const [player, setPlayer] = useState("");
   const [loadingBid, setLoadingBid] = useState(false);
@@ -23,6 +26,13 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
   const [form] = Form.useForm();
   const [selectedAuction, setSelectedAuction] = useState(null);
   const [auctionActionsVisible, setAuctionActionsVisible] = useState(false);
+
+  useEffect(() => {
+    async function fetchUserCars() {
+      setUserCars(await fetchUserCarsRequest(playerInfo.id))
+    }
+    fetchUserCars()
+  }, [playerInfo.id]);
 
   const showModal = () => {
     setVisible(true);
@@ -224,35 +234,17 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
         </div>
       </div>
       <SelectedAuctionDetails selectedAuction={selectedAuction} />
-      <Modal
+      <NewAuctionModal
         visible={visible}
-        title="Create a New Auction"
-        okText="Create"
-        cancelText="Cancel"
-        onCancel={handleCancel}
-        onOk={handleOk}
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item name="carName" label="Car Name" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="minBid" label="Minimal bid" rules={[{ required: true }]}>
-            <Input type="number" defaultValue={0} />
-          </Form.Item>
-          <Form.Item name="buy" label="Buy" rules={[{ required: true }]}>
-            <Input type="number" defaultValue={0} />
-          </Form.Item>
-          <Form.Item name="auctionDuration" label="Auction Duration (hours)" rules={[{ required: true }]}>
-            <Select value={auctionDuration} onChange={(value) => setAuctionDuration(value)}>
-              <Option value={1}>1 hour</Option>
-              <Option value={3}>3 hours</Option>
-              <Option value={6}>6 hours</Option>
-              <Option value={12}>12 hours</Option>
-              <Option value={24}>24 hours</Option>
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
+        handleCancel={handleCancel}
+        handleOk={handleOk}
+        form={form}
+        auctionDuration={auctionDuration}
+        setAuctionDuration={setAuctionDuration}
+        userCars={userCars}
+        setSelectedCar={setSelectedCar}
+        selectedCar={selectedCar}
+      />
     </div>
   );
 }

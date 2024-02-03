@@ -7,6 +7,7 @@ import "./carsPage.css";
 import CarDetailsModal from "./CarDetailsModal";
 import CarCard from "./CarCard";
 import { fetchUserCarsRequest } from "../../functions";
+import NewAuctionModal from "../AuctionPage/NewAuctionModal";
 
 const { Option } = Select;
 const client = generateClient();
@@ -14,10 +15,13 @@ const client = generateClient();
 const MyCars = ({ playerInfo, setMoney, money }) => {
   const [cars, setCars] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [newAuctionvisible, setNewAuctionVisible] = useState(false);
+  const [auctionDuration, setAuctionDuration] = useState(1);
   const [loadingBuy, setLoadingBuy] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
-  const [form] = Form.useForm();
   const [carDetailsVisible, setCarDetailsVisible] = useState(false);
+
+  const [form] = Form.useForm();
 
   const fetchCars = useCallback(async () => {
     try {
@@ -73,6 +77,34 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
     }
   };
 
+  async function createNewAuction() {
+    try {
+      const formData = form.getFieldsValue();
+      const auctionDurationSeconds = auctionDuration * 60 * 60;
+      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+
+      const endTime = currentTimeInSeconds + auctionDurationSeconds;
+
+      const newAuction = {
+        carName: formData.carName,
+        player: playerInfo.nickname,
+        buy: formData.buy,
+        minBid: formData.minBid,
+        currentBid: formData.minBid,
+        endTime: endTime,
+        status: "active",
+      };
+
+      await client.graphql({
+        query: mutations.createAuction,
+        variables: { input: newAuction },
+      });
+      setNewAuctionVisible(false);
+    } catch (error) {
+      console.error('Error creating a new auction', error);
+    }
+  }
+
   const showModal = () => {
     setVisible(true);
   };
@@ -85,28 +117,14 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
     setVisible(false);
   };
 
+  const cancelNewAuction = () => {
+    setNewAuctionVisible(false);
+  };
+
   const handleCarDetailsCancel = () => {
     setCarDetailsVisible(false);
   };
 
-  const createNewCar = async (values) => {
-    const newCar = {
-      make: values.make,
-      model: values.model,
-      year: parseInt(values.year),
-      price: parseInt(values.price),
-      type: values.type,
-    };
-    await client.graphql({
-      query: mutations.createCar,
-      variables: { input: newCar },
-    });
-    await fetchCars();
-    setVisible(false);
-    form.resetFields();
-    message.success('Car created successfully!');
-  };
-  
   const getImageSource = (make, model) => {
     const imageName = `${make} ${model}.png`;
     return require(`../../assets/images/${imageName}`);
@@ -114,66 +132,33 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <Button type="primary" onClick={showModal} style={{ marginBottom: '20px' }}>
-        Create New Car
-      </Button>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: "wrap" }}>
         {cars.length ? cars.map((car) => (
           <CarCard selectedCar={selectedCar} setSelectedCar={setSelectedCar} showCarDetailsModal={showCarDetailsModal} car={car.car} getImageSource={getImageSource}/>
         )) : <Typography.Title>You have no cars</Typography.Title>}
       </div>
-
-      <Modal
-        visible={visible}
-        title="Create a New Car"
-        okText="Create"
-        cancelText="Cancel"
-        onCancel={handleCancel}
-        onOk={() => {
-          form
-            .validateFields()
-            .then((values) => {
-              createNewCar(values);
-            })
-            .catch((info) => {
-              console.log('Validate Failed:', info);
-            });
-        }}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          initialValues={{ remember: true }}
-          onFinish={(values) => createNewCar(values)}
-        >
-          <Form.Item name="make" label="Make" rules={[{ required: true, message: 'Please enter the make!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="model" label="Model" rules={[{ required: true, message: 'Please enter the model!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="year" label="Year" rules={[{ required: true, message: 'Please enter the year!' }]}>
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item name="price" label="Price" rules={[{ required: true, message: 'Please enter the price!' }]}>
-            <Input type="number" />
-          </Form.Item>
-          <Form.Item name="type" label="Type" rules={[{ required: true, message: 'Please select the type!' }]}>
-            <Select>
-              <Option value="regular">Regular</Option>
-              <Option value="epic">Epic</Option>
-              <Option value="legendary">Legendary</Option>
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
-
       <CarDetailsModal
         visible={carDetailsVisible && selectedCar !== null}
         handleCancel={handleCarDetailsCancel}
         selectedCar={selectedCar}
         buyCar={buyCar}
         loadingBuy={loadingBuy}
+        forAuction
+        showNewAuction={() => {
+          handleCarDetailsCancel()
+          setNewAuctionVisible(true)
+        }}
+      />
+      <NewAuctionModal
+        visible={newAuctionvisible}
+        handleCancel={cancelNewAuction}
+        handleOk={createNewAuction}
+        form={form}
+        auctionDuration={auctionDuration}
+        setAuctionDuration={setAuctionDuration}
+        userCars={cars}
+        setSelectedCar={setSelectedCar}
+        selectedCar={selectedCar}
       />
     </div>
   );
