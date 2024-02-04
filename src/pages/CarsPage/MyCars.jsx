@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Modal, Form, Input, message, Select, Typography } from "antd";
+import { Form, message, Typography } from "antd";
 import { generateClient } from 'aws-amplify/api';
 import { listCars as listCarsQuery } from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
@@ -9,7 +9,6 @@ import CarCard from "./CarCard";
 import { fetchUserCarsRequest } from "../../functions";
 import NewAuctionModal from "../AuctionPage/NewAuctionModal";
 
-const { Option } = Select;
 const client = generateClient();
 
 const MyCars = ({ playerInfo, setMoney, money }) => {
@@ -24,16 +23,6 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
   const [carDetailsVisible, setCarDetailsVisible] = useState(false);
 
   const [form] = Form.useForm();
-
-  const fetchCars = useCallback(async () => {
-    try {
-      const carData = await client.graphql({ query: listCarsQuery });
-      setCars(carData.data.listCars.items);
-    } catch (error) {
-      console.error("Error fetching cars:", error);
-    }
-  }, []);
-
   useEffect(() => {
     async function fetchUserCars() {
       setCars(await fetchUserCarsRequest(playerInfo.id))
@@ -104,24 +93,30 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
           input: newAuction,
         },
       });
+      const response = await client.graphql({
+        query: mutations.deleteUserCar,
+        variables: {
+          input: {
+            id: selectedCar.id,
+          },
+        },
+      });
+      
+      
+      const deletedCar = response.data.deleteUserCar;
   
-      console.log('New auction created:', result.data.createAuction);
+      // Handle the response or perform any necessary actions
+      console.log('Car deleted successfully:', deletedCar);
+  
+      cancelNewAuction()
       message.success('Auction created successfully!');
     } catch (error) {
-      console.error('Error creating auction:', error);
+      console.log('Error creating auction:', error);
     }
-  };
-  
-  const showModal = () => {
-    setVisible(true);
   };
 
   const showCarDetailsModal = () => {
     setCarDetailsVisible(true);
-  };
-
-  const handleCancel = () => {
-    setVisible(false);
   };
 
   const cancelNewAuction = () => {

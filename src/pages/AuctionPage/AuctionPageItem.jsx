@@ -4,10 +4,10 @@ import { Button, Card, Col, Flex, Space, Typography } from 'antd';
 import "./auctionPage.css"
 import AuctionActionsModal from './AuctionActionsModal';
 
-const getImageSource = (carName) => {
-    const imageName = `${carName}.png`;
+const getImageSource = (make, model) => {
+    const imageName = `${make} ${model}.png`;
     return require(`../../assets/images/${imageName}`);
-};
+  };
 
 export default function AuctionPageItem({ auction, increaseBid, buyItem, isSelected }) {
     const [loadingBuy, setLoadingBuy] = useState(false);
@@ -32,10 +32,10 @@ export default function AuctionPageItem({ auction, increaseBid, buyItem, isSelec
 
     return (
         <Col className='auctionPageItem' span={24} style={{ height: '20%', width: '100%', display: 'flex' }} onClick={() => setVisible(true)} >
-            <Card title={<Typography.Title className='carName'>{auction.carName}</Typography.Title>} style={{ flex: 1, border: isSelected ? '2px solid #ff69b4' : 'none' }}>
+            <Card title={<Typography.Title className='carName'>{auction.make}&nbsp;{auction.model} </Typography.Title>} style={{ flex: 1, border: isSelected ? '2px solid #ff69b4' : 'none' }}>
                 <div style={{ display: 'flex', flexDirection: "column", alignItems: "center" }}>
                     <img
-                        src={getImageSource(auction.carName)}
+                        src={getImageSource(auction.make, auction.model)}
                         alt="Auction"
                         style={{ width: 'auto', height: '10vw', objectFit: "contain", marginRight: '10px' }}
                     />

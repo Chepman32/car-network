@@ -76,7 +76,7 @@ export default function App() {
           {({ signOut, user }) => (  
             <>
               {nickname !== null && (
-                <main>
+                <main >
                   {playerInfo && (
                     <CustomHeader  
                       money={playerInfo.money}

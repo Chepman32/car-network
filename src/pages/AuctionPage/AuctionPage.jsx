@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Hub } from 'aws-amplify/utils';
 import "@aws-amplify/ui-react/styles.css";
-import { Modal, Form, Input, Button, Card, Col, Row, Typography, Flex, Select, message, Spin } from "antd";
+import { List, Form, Input, Button, Card, Col, Row, Typography, Flex, Select, message, Spin } from "antd";
 import { generateClient } from 'aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import { listAuctions as listAuctionsQuery } from '../../graphql/queries';
@@ -217,9 +217,6 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
     <div style={{ display: 'flex', padding: '20px' }}>
       <div style={{ flex: 1 }}>
         <Typography.Title level={1} style={{ textAlign: 'center' }}>Virtual Car Auction</Typography.Title>
-        <Flex justify="center">
-          <Button onClick={showModal}>Start auction</Button>
-        </Flex>
         <div className="auction-items-container" style={{ flex: 1 }}>
           {auctions.map((auction) => (
             <AuctionPageItem
@@ -234,17 +231,6 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
         </div>
       </div>
       <SelectedAuctionDetails selectedAuction={selectedAuction} />
-      <NewAuctionModal
-        visible={visible}
-        handleCancel={handleCancel}
-        handleOk={handleOk}
-        form={form}
-        auctionDuration={auctionDuration}
-        setAuctionDuration={setAuctionDuration}
-        userCars={userCars}
-        setSelectedCar={setSelectedCar}
-        selectedCar={selectedCar}
-      />
     </div>
   );
 }
