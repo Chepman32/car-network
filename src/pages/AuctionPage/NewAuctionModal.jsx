@@ -3,7 +3,7 @@ import React from 'react';
 
 const { Option } = Select;
 
-export default function NewAuctionModal({ visible, handleCancel, handleOk, selectedCar, setSelectedCar, buy, setBuy,minBid, setMinBid, setAuctionDuration, auctionDuration }) {
+export default function NewAuctionModal({ visible, handleCancel, handleOk, selectedCar, setSelectedCar, buy, setBuy, minBid, setMinBid, setAuctionDuration, auctionDuration }) {
   const [form] = Form.useForm();
 
   return (
@@ -21,10 +21,10 @@ export default function NewAuctionModal({ visible, handleCancel, handleOk, selec
           <Input type="number" defaultValue={0} value={minBid} onChange={(event) => setMinBid(event.target.value)} />
         </Form.Item>
         <Form.Item name="buy" label="Buy" rules={[{ required: true }]}>
-          <Input type="number" defaultValue={0} value={buy} onChange={(event) => setBuy(event.target.value)} disabled/>
+          <Input type="number" defaultValue={30} value={buy} onChange={(event) => setBuy(event.target.value)}/>
         </Form.Item>
         <Form.Item name="auctionDuration" label="Auction Duration (hours)" rules={[{ required: true }]}>
-          <Select value={auctionDuration} onChange={(value) => setAuctionDuration(value)}>
+          <Select value={auctionDuration} onChange={(value) => setAuctionDuration(value)} >
             <Option value={1}>1 hour</Option>
             <Option value={3}>3 hours</Option>
             <Option value={6}>6 hours</Option>

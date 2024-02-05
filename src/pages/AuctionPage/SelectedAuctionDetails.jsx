@@ -26,10 +26,10 @@ export const SelectedAuctionDetails = ({ selectedAuction }) => {
               <Flex direction="column" justify="space-between" align="center" style={{ flex: 1 }}>
                 <Flex justify="space-between" align="center">
                   <Typography.Text className="subText">
-                    {`Current Bid`}
+                    {`${selectedAuction?.currentBid ? "Current" : "Start"} Bid: `}
                   </Typography.Text>
                   <Typography.Text className="price bid">
-                    {selectedAuction.currentBid}
+                    &nbsp;{selectedAuction?.currentBid || selectedAuction.minBid}
                   </Typography.Text>
                 </Flex>
                 <Flex justify="space-between" align="center">

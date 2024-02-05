@@ -78,7 +78,6 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
       model: selectedCar.model,
       year: selectedCar.year,
       type: selectedCar.type,
-      currentBid: 0,
       endTime,
       status: 'Active',
       lastBidPlayer: '',

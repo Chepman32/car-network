@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Hub } from 'aws-amplify/utils';
 import "@aws-amplify/ui-react/styles.css";
-import { List, Form, Input, Button, Card, Col, Row, Typography, Flex, Select, message, Spin } from "antd";
+import { List, Form, Input, Button, Card, Col, Row, Typography, Flex, Select, message, Spin, Space } from "antd";
 import { generateClient } from 'aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import { listAuctions as listAuctionsQuery } from '../../graphql/queries';
@@ -26,6 +26,14 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
   const [form] = Form.useForm();
   const [selectedAuction, setSelectedAuction] = useState(null);
   const [auctionActionsVisible, setAuctionActionsVisible] = useState(false);
+
+  const handleAuctionActionsShow = () => {
+    setAuctionActionsVisible(true);
+  };
+
+  const handleAuctionActionsCancel = () => {
+    setAuctionActionsVisible(false);
+  };
 
   useEffect(() => {
     async function fetchUserCars() {
@@ -62,44 +70,6 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
       console.error("Error fetching auctions:", error);
     }
   }, []);
-
-  async function createNewAuction() {
-    try {
-      const formData = form.getFieldsValue();
-      const auctionDurationSeconds = auctionDuration * 60 * 60;
-      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-
-      const endTime = currentTimeInSeconds + auctionDurationSeconds;
-
-      const newAuction = {
-        carName: formData.carName,
-        player: player,
-        buy: formData.buy,
-        minBid: formData.minBid,
-        currentBid: formData.minBid,
-        endTime: endTime,
-        status: "active",
-      };
-
-      await client.graphql({
-        query: mutations.createAuction,
-        variables: { input: newAuction },
-      });
-      listAuctions();
-      setVisible(false);
-    } catch (error) {
-      console.error('Error creating a new auction', error);
-    }
-  }
-
-  const handleOk = () => {
-    try {
-      createNewAuction();
-      setVisible(false);
-    } catch (error) {
-      console.error('Error creating auction', error);
-    }
-  };
 
   const increaseBid = async (auction) => {
     try {
@@ -140,39 +110,44 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
       setLoadingBid(false);
     }
   };
-
-  const buyItem = async (auction) => {
+  
+  const buyItem = async () => {
     try {
       setLoadingBuy(true);
-      const increasedBidValue = Math.round(auction.currentBid * 1.1) || Math.round(auction.minBid * 1.1);
-
+  
+      const increasedBidValue = Math.round(selectedAuction.currentBid * 1.1) || Math.round(selectedAuction.minBid * 1.1);
+  
       const updatedAuction = {
-        id: auction.id,
-        carName: auction.carName,
-        player: auction.player,
-        buy: 300,
-        minBid: 300,
-        currentBid: 300,
-        endTime: auction.endTime,
+        ...selectedAuction,
+        currentBid: selectedAuction.buy,
         lastBidPlayer: playerInfo.nickname,
-        status: "finished",
+        status: "Finished",
       };
-
-      setMoney(auction.lastBidPlayer === playerInfo.nickname ? money - (auction.buy - auction.currentBid) : money - auction.buy);
-
-      await client.graphql({
-        query: mutations.updateAuction,
-        variables: { input: updatedAuction },
+  
+      setMoney((prevMoney) => {
+        const bidDifference = selectedAuction.lastBidPlayer === playerInfo.nickname
+          ? selectedAuction.buy - selectedAuction.currentBid
+          : increasedBidValue;
+        
+        return prevMoney - bidDifference;
       });
-      await client.graphql({
-        query: mutations.updateUser,
-        variables: {
-          input: {
-            id: playerInfo.id,
-            money: auction.lastBidPlayer === playerInfo.nickname ? money - (auction.buy - auction.currentBid) : money - increasedBidValue
-          }
-        },
-      });
+  
+      await Promise.all([
+        client.graphql({
+          query: mutations.updateAuction,
+          variables: { input: updatedAuction },
+        }),
+        client.graphql({
+          query: mutations.updateUser,
+          variables: {
+            input: {
+              id: playerInfo.id,
+              money: selectedAuction.lastBidPlayer === playerInfo.nickname ? money - (selectedAuction.buy - selectedAuction.currentBid) : money - increasedBidValue
+            },
+          },
+        }),
+      ]);
+  
       message.success('Car successfully bought!');
       listAuctions();
     } catch (error) {
@@ -181,6 +156,7 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
       setLoadingBuy(false);
     }
   };
+  
 
   const listener = async (data) => {
     const { nickname } = data?.payload?.data;
@@ -211,26 +187,42 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [auctions, selectedAuction]);
+  }, [auctions]);
+
+  const handleItemClick = (selectedAuction) => {
+    setSelectedAuction(selectedAuction);
+    handleAuctionActionsShow();
+  };
 
   return (
     <div style={{ display: 'flex', padding: '20px' }}>
       <div style={{ flex: 1 }}>
         <Typography.Title level={1} style={{ textAlign: 'center' }}>Virtual Car Auction</Typography.Title>
-        <div className="auction-items-container" style={{ flex: 1 }}>
+        <div className="auction-items-container">
           {auctions.map((auction) => (
             <AuctionPageItem
               key={auction.id}
+              setSelectedAuction={setSelectedAuction}
               auction={auction}
+              index={auctions.indexOf(auction)}
               increaseBid={increaseBid}
-              buyItem={buyItem}
               isSelected={auction === selectedAuction}
-              setAuctionActionsVisible={setAuctionActionsVisible}
+              handleAuctionActionsShow={handleAuctionActionsShow}
+              handleItemClick={handleItemClick}
             />
           ))}
         </div>
       </div>
       <SelectedAuctionDetails selectedAuction={selectedAuction} />
+      <AuctionActionsModal
+        visible={auctionActionsVisible}
+        handleAuctionActionsCancel={handleAuctionActionsCancel}
+        selectedAuction={selectedAuction}
+        bid={increaseBid}
+        loadingBid={loadingBid}
+        buyCar={buyItem}
+        loadingBuy={loadingBuy}
+      />
     </div>
   );
 }

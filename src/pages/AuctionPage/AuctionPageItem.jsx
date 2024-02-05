@@ -1,37 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { calculateTimeDifference } from '../../functions';
-import { Button, Card, Col, Flex, Space, Typography } from 'antd';
+import { Card, Col, Flex, Space, Typography } from 'antd';
 import "./auctionPage.css"
-import AuctionActionsModal from './AuctionActionsModal';
 
 const getImageSource = (make, model) => {
     const imageName = `${make} ${model}.png`;
     return require(`../../assets/images/${imageName}`);
   };
 
-export default function AuctionPageItem({ auction, increaseBid, buyItem, isSelected }) {
-    const [loadingBuy, setLoadingBuy] = useState(false);
-    const [loadingBid, setLoadingBid] = useState(false);
-    const [visible, setVisible] = useState(false);
-
-    const bid = async (auction) => {
-        setLoadingBid(true);
-        await increaseBid(auction);
-        setLoadingBid(false);
-    };
-
-    const buy = async (auction) => {
-        setLoadingBuy(true);
-        await buyItem(auction);
-        setLoadingBuy(false);
-    };
-
-    const handleCancel = () => {
-        setVisible(false);
-      };
+export default function AuctionPageItem({ auction, isSelected, index, handleAuctionActionsShow }) {
 
     return (
-        <Col className='auctionPageItem' span={24} style={{ height: '20%', width: '100%', display: 'flex' }} onClick={() => setVisible(true)} >
+        <Col className='auctionPageItem' span={24} style={{ height: '20%', width: '100%', display: 'flex' }} onClick={handleAuctionActionsShow} >
             <Card title={<Typography.Title className='carName'>{auction.make}&nbsp;{auction.model} </Typography.Title>} style={{ flex: 1, border: isSelected ? '2px solid #ff69b4' : 'none' }}>
                 <div style={{ display: 'flex', flexDirection: "column", alignItems: "center" }}>
                     <img
@@ -61,15 +41,6 @@ export default function AuctionPageItem({ auction, increaseBid, buyItem, isSelec
                     </Space>
                 </div>
             </Card>
-            <AuctionActionsModal
-                visible={visible}
-                handleAuctionActionsCancel={handleCancel}
-                selectedAuction={auction}
-                bid={bid}
-                loadingBid={loadingBid}
-                buyCar={buy}
-                loadingBuy={loadingBuy}
-            />
         </Col>
     );
 }

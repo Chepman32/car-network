@@ -1,8 +1,7 @@
+// AuctionActionsModal.js
 import React from "react";
 import { Modal, Spin } from "antd";
 import "./auctionPage.css";
-
-// ... (other imports)
 
 const AuctionActionsModal = ({ visible, handleAuctionActionsCancel, selectedAuction, loadingBid, bid, buyCar, loadingBuy }) => {
   return (
@@ -21,7 +20,7 @@ const AuctionActionsModal = ({ visible, handleAuctionActionsCancel, selectedAuct
         {loadingBid ? <Spin /> : "Make a bid"}
       </div>
       <div className="auctionActionsModal__row">Row 4</div>
-      <div className="auctionActionsModal__row">Row 5</div>
+      <div className="auctionActionsModal__row" onClick={handleAuctionActionsCancel} >Row 5</div>
     </Modal>
   );
 };
