@@ -11,8 +11,8 @@ import { listUsers } from "./graphql/queries";
 import { createUser } from "./graphql/mutations";
 import { Route, Routes } from "react-router-dom";
 import { BrowserRouter } from "react-router-dom";
-import CarsStore from "./pages/CarsPage/CarsStore";
-import MyCars from "./pages/CarsPage/MyCars";
+import CarsStore from "./pages/CarPages/CarsStore";
+import MyCars from "./pages/CarPages/MyCars";
 import { Spin, message } from "antd";
 import { getCurrentUser } from "aws-amplify/auth";
 

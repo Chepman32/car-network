@@ -21,7 +21,7 @@ export default function NewAuctionModal({ visible, handleCancel, handleOk, selec
           <Input type="number" defaultValue={0} value={minBid} onChange={(event) => setMinBid(event.target.value)} />
         </Form.Item>
         <Form.Item name="buy" label="Buy" rules={[{ required: true }]}>
-          <Input type="number" defaultValue={0} value={buy} onChange={(event) => setBuy(event.target.value)} />
+          <Input type="number" defaultValue={0} value={buy} onChange={(event) => setBuy(event.target.value)} disabled/>
         </Form.Item>
         <Form.Item name="auctionDuration" label="Auction Duration (hours)" rules={[{ required: true }]}>
           <Select value={auctionDuration} onChange={(value) => setAuctionDuration(value)}>
@@ -33,7 +33,6 @@ export default function NewAuctionModal({ visible, handleCancel, handleOk, selec
           </Select>
               </Form.Item>
           </Form>
-          <h2 onClick={() => console.log(minBid)}>Values</h2>
     </Modal>
   );
 }

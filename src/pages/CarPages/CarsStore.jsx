@@ -6,7 +6,6 @@ import * as mutations from '../../graphql/mutations';
 import "./carsPage.css";
 import CarDetailsModal from "./CarDetailsModal";
 import CarCard from "./CarCard";
-import { fetchUserCarsRequest } from "../../functions";
 
 const { Option } = Select;
 const client = generateClient();
@@ -118,9 +117,9 @@ const CarsStore = ({ playerInfo, setMoney, money }) => {
         Create New Car
       </Button>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: "wrap" }}>
-        {cars.length ? cars.map((car) => (
+        {cars.length && cars.map((car) => (
           <CarCard selectedCar={selectedCar} setSelectedCar={setSelectedCar} showCarDetailsModal={showCarDetailsModal} car={car} getImageSource={getImageSource}/>
-        )) : <Typography.Title>You have no cars</Typography.Title>}
+        ))}
       </div>
 
       <Modal

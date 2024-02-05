@@ -20,7 +20,7 @@ type Auction @model @auth(rules: [{allow: public, operations: [read, create, upd
   minBid: Int!
 }
 
-type Car @model @auth(rules: [{allow: public, operations: [read, create]}]) {
+type Car @model @auth(rules: [{allow: public}]) {
   id: ID!
   make: String!
   model: String!

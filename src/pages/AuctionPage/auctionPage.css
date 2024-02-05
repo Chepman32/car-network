@@ -21,7 +21,7 @@
   }
   
 .auction-items-container {
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto; /* Enable vertical scroll when items overflow */
   }
   

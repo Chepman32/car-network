@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, message, Typography } from "antd";
 import { generateClient } from 'aws-amplify/api';
 import { listCars as listCarsQuery } from '../../graphql/queries';
@@ -6,7 +6,7 @@ import * as mutations from '../../graphql/mutations';
 import "./carsPage.css";
 import CarDetailsModal from "./CarDetailsModal";
 import CarCard from "./CarCard";
-import { fetchUserCarsRequest } from "../../functions";
+import { fetchUserCarsRequest, getUserCar, deleteUserCar } from "../../functions";
 import NewAuctionModal from "../AuctionPage/NewAuctionModal";
 
 const client = generateClient();
@@ -19,6 +19,7 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
   const [minBid, setMinBid] = useState(0);
   const [buy, setBuy] = useState(0)
   const [loadingBuy, setLoadingBuy] = useState(false);
+  const [loadingNewAuction, setLoadingNewAuction] = useState(false);
   const [selectedCar, setSelectedCar] = useState(null);
   const [carDetailsVisible, setCarDetailsVisible] = useState(false);
 
@@ -28,7 +29,7 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
       setCars(await fetchUserCarsRequest(playerInfo.id))
     }
     fetchUserCars()
-  }, [playerInfo.id]);
+  }, [playerInfo.id, loadingNewAuction]);
 
   const buyCar = async (car) => {
     if (playerInfo && playerInfo.id) {
@@ -56,7 +57,6 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
             },
           },
         });
-
         message.success('Car successfully bought!');
       } catch (err) {
         console.log(err);
@@ -69,49 +69,40 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
   };
 
   const createNewAuction = async () => {
-      const auctionDurationSeconds = auctionDuration * 60 * 60;
-      const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-      const endTime = currentTimeInSeconds + auctionDurationSeconds;
+    const auctionDurationSeconds = auctionDuration * 60 * 60;
+    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
+    const endTime = currentTimeInSeconds + auctionDurationSeconds;
 
-      const newAuction = {
-        make: selectedCar.make,
-        model: selectedCar.model,
-        year: selectedCar.year,
-        type: selectedCar.type,
-    currentBid: 0,
-    endTime,
-    status: 'Active',
-    lastBidPlayer: '',
-    player: playerInfo.nickname,
-    buy,
-    minBid,
-      };
+    const newAuction = {
+      make: selectedCar.make,
+      model: selectedCar.model,
+      year: selectedCar.year,
+      type: selectedCar.type,
+      currentBid: 0,
+      endTime,
+      status: 'Active',
+      lastBidPlayer: '',
+      player: playerInfo.nickname,
+      buy,
+      minBid,
+    };
+
     try {
+      setLoadingNewAuction(true)
+      selectedCar && await deleteUserCar(await getUserCar(playerInfo.id, selectedCar.id))
       const result = await client.graphql({
         query: mutations.createAuction,
         variables: {
           input: newAuction,
         },
       });
-      const response = await client.graphql({
-        query: mutations.deleteUserCar,
-        variables: {
-          input: {
-            id: selectedCar.id,
-          },
-        },
-      });
-      
-      
-      const deletedCar = response.data.deleteUserCar;
-  
-      // Handle the response or perform any necessary actions
-      console.log('Car deleted successfully:', deletedCar);
-  
-      cancelNewAuction()
       message.success('Auction created successfully!');
     } catch (error) {
       console.log('Error creating auction:', error);
+    }
+    finally {
+      setLoadingNewAuction(false)
+      setNewAuctionVisible(false);
     }
   };
 
@@ -137,13 +128,20 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
       <h2 onClick={() => console.log(selectedCar)}>selected car</h2>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: "wrap" }}>
         {cars.length ? cars.map((car) => (
-          <CarCard selectedCar={selectedCar} setSelectedCar={setSelectedCar} showCarDetailsModal={showCarDetailsModal} car={car.car} getImageSource={getImageSource}/>
+          <CarCard
+            selectedCar={selectedCar}
+            setSelectedCar={setSelectedCar}
+            showCarDetailsModal={showCarDetailsModal}
+            car={car.car}
+            getImageSource={getImageSource}
+          />
         )) : <Typography.Title>You have no cars</Typography.Title>}
       </div>
       <CarDetailsModal
         visible={carDetailsVisible && selectedCar !== null}
         handleCancel={handleCarDetailsCancel}
         selectedCar={selectedCar}
+        loadingNewAuction={loadingNewAuction}
         buyCar={buyCar}
         loadingBuy={loadingBuy}
         forAuction
