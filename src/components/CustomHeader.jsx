@@ -12,8 +12,8 @@ const CustomHeader = (username, money) => {
       <Menu.Item key="cars">
         <Link to="/myCars">My Cars</Link>
       </Menu.Item>
-      <Menu.Item key="auctions">
-        <Link to="/auctions">Auctions</Link>
+      <Menu.Item key="auctionsHub">
+        <Link to="/auctionsHub">Auctions</Link>
       </Menu.Item>
     </Menu>
   );

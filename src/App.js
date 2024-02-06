@@ -15,6 +15,9 @@ import CarsStore from "./pages/CarPages/CarsStore";
 import MyCars from "./pages/CarPages/MyCars";
 import { Spin, message } from "antd";
 import { getCurrentUser } from "aws-amplify/auth";
+import AuctionsHub from "./pages/AuctionPage/AuctionHub";
+import MyBids from "./pages/AuctionPage/MyBids";
+import MyAuctions from "./pages/AuctionPage/MyAuctions";
 
 const client = generateClient(); 
 Amplify.configure(awsExports);
@@ -124,9 +127,35 @@ export default function App() {
                       }  
                         />
                         <Route
+                      path="/auctionsHub"
+                      element={
+                        <AuctionsHub/>
+                      }  
+                        />
+                        <Route
                       path="/auctions"
                       element={
                         <AuctionPage
+                          playerInfo={playerInfo}
+                          money={money} 
+                          setMoney={setMoney}
+                        />
+                      }
+                        />
+                        <Route
+                      path="/myBids"
+                      element={
+                        <MyBids
+                          playerInfo={playerInfo}
+                          money={money} 
+                          setMoney={setMoney}
+                        />
+                      }  
+                        />
+                        <Route
+                      path="/myAuctions"
+                      element={
+                        <MyAuctions
                           playerInfo={playerInfo}
                           money={money} 
                           setMoney={setMoney}
