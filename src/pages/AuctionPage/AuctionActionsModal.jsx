@@ -12,6 +12,7 @@ const AuctionActionsModal = ({ visible, handleAuctionActionsCancel, selectedAuct
       visible={visible}  // Change 'open' to 'visible'
       title="Car Details"
       onCancel={handleAuctionActionsCancel}
+      footer={null}
     >
       <div className="auctionActionsModal__row" onClick={buyCar}>
         {loadingBuy ? <Spin /> : "Buy"}

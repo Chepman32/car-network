@@ -24,22 +24,20 @@ export const SelectedAuctionDetails = ({ selectedAuction }) => {
                 />
               </div>
               <Flex direction="column" justify="space-between" align="center" style={{ flex: 1 }}>
-                <Flex justify="space-between" align="center">
-                  <Typography.Text className="subText">
+              <Typography.Text className="subText">
                     {`${selectedAuction?.currentBid ? "Current" : "Start"} Bid: `}
                   </Typography.Text>
                   <Typography.Text className="price bid">
                     &nbsp;{selectedAuction?.currentBid || selectedAuction.minBid}
                   </Typography.Text>
-                </Flex>
-                <Flex justify="space-between" align="center">
-                  <Typography.Text className="subText">
+              </Flex>
+              <Flex direction="column" justify="space-between" align="center" style={{ flex: 1 }}>
+              <Typography.Text className="subText">
                     {`Buy out:`}
                   </Typography.Text>
                   <Typography.Text className="price buy">
                     {`${selectedAuction.buy}`}
                   </Typography.Text>
-                </Flex>
               </Flex>
             </Space>
           </Card>

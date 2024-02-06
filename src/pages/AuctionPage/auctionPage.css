@@ -1,3 +1,8 @@
+.auctionPageItem {
+  width: 100px;
+  height: 10px;
+  display: flex;
+}
 .auctionDetails {
   max-height: 85vh;
     height: 100%;
@@ -12,7 +17,7 @@
 
   .auction-items-container {
     max-height: 84vh;
-    overflow-y: scroll; /* Enable vertical scroll when items overflow */
+    overflow-y: auto;
   }
   
   .auctionDetails_image {

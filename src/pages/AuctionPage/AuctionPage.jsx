@@ -63,9 +63,10 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
           timeLeft
         };
       });
+      const filtered = auctions.filter(auction => auction.player !== playerInfo.nickname)
 
-      setAuctions(auctions);
-      auctions.length > 0 && !selectedAuction && setSelectedAuction(auctions[0]);
+      setAuctions(filtered);
+      filtered.length > 0 && !selectedAuction && setSelectedAuction(filtered[0]);
     } catch (error) {
       console.error("Error fetching auctions:", error);
     }

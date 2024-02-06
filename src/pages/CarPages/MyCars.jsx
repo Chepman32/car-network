@@ -124,7 +124,6 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h2 onClick={() => console.log(selectedCar)}>selected car</h2>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: "wrap" }}>
         {cars.length ? cars.map((car) => (
           <CarCard

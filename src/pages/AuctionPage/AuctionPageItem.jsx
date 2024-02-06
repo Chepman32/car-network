@@ -11,8 +11,8 @@ const getImageSource = (make, model) => {
 export default function AuctionPageItem({ auction, isSelected, index, handleAuctionActionsShow }) {
 
     return (
-        <Col className='auctionPageItem' span={24} style={{ height: '20%', width: '100%', display: 'flex' }} onClick={handleAuctionActionsShow} >
-            <Card title={<Typography.Title className='carName'>{auction.make}&nbsp;{auction.model} </Typography.Title>} style={{ flex: 1, border: isSelected ? '2px solid #ff69b4' : 'none' }}>
+        <Col className='auctionPageItem' span={24} style={{ height: '10%', width: '100%', display: 'flex' }} onClick={handleAuctionActionsShow} >
+            <Card title={<Typography.Title className='carName'>{auction.make}&nbsp;{auction.model} </Typography.Title>} style={{ width: "100%", flex: 1, border: isSelected ? '2px solid #ff69b4' : 'none' }}>
                 <div style={{ display: 'flex', flexDirection: "column", alignItems: "center" }}>
                     <img
                         src={getImageSource(auction.make, auction.model)}
