@@ -80,15 +80,12 @@ export default function App() {
             <>
               {nickname !== null && (
                 <main >
-                  {playerInfo && (
+                  {playerInfo ? (
                     <CustomHeader  
-                      money={playerInfo.money}
+                      money={money}
                       username={playerInfo.nickname}
                     />
-                  )}
-
-                  <h2>{money} </h2>
-                  
+                  ) : null}
                   {
                     playerInfo
                       ?
