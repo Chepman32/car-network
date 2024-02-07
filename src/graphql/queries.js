@@ -44,7 +44,7 @@ export const getAuction = /* GraphQL */ `
       make
       model
       year
-      type
+      carId
       currentBid
       endTime
       status
@@ -52,6 +52,7 @@ export const getAuction = /* GraphQL */ `
       player
       buy
       minBid
+      type
       createdAt
       updatedAt
       __typename
@@ -70,7 +71,7 @@ export const listAuctions = /* GraphQL */ `
         make
         model
         year
-        type
+        carId
         currentBid
         endTime
         status
@@ -78,6 +79,7 @@ export const listAuctions = /* GraphQL */ `
         player
         buy
         minBid
+        type
         createdAt
         updatedAt
         __typename

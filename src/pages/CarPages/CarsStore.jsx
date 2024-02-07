@@ -6,6 +6,7 @@ import * as mutations from '../../graphql/mutations';
 import "./carsPage.css";
 import CarDetailsModal from "./CarDetailsModal";
 import CarCard from "./CarCard";
+import { createNewUserCar } from "../../functions";
 
 const { Option } = Select;
 const client = generateClient();
@@ -51,15 +52,7 @@ const CarsStore = ({ playerInfo, setMoney, money }) => {
         });
 
         // Create a new user-car association
-        await client.graphql({
-          query: mutations.createUserCar,
-          variables: {
-            input: {
-              userId: playerInfo.id,
-              carId: car.id,
-            },
-          },
-        });
+        createNewUserCar(playerInfo.id, car.id)
 
         message.success('Car successfully bought!');
       } catch (err) {

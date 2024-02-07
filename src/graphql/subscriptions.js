@@ -56,7 +56,7 @@ export const onCreateAuction = /* GraphQL */ `
       make
       model
       year
-      type
+      carId
       currentBid
       endTime
       status
@@ -64,6 +64,7 @@ export const onCreateAuction = /* GraphQL */ `
       player
       buy
       minBid
+      type
       createdAt
       updatedAt
       __typename
@@ -77,7 +78,7 @@ export const onUpdateAuction = /* GraphQL */ `
       make
       model
       year
-      type
+      carId
       currentBid
       endTime
       status
@@ -85,6 +86,7 @@ export const onUpdateAuction = /* GraphQL */ `
       player
       buy
       minBid
+      type
       createdAt
       updatedAt
       __typename
@@ -98,7 +100,7 @@ export const onDeleteAuction = /* GraphQL */ `
       make
       model
       year
-      type
+      carId
       currentBid
       endTime
       status
@@ -106,6 +108,7 @@ export const onDeleteAuction = /* GraphQL */ `
       player
       buy
       minBid
+      type
       createdAt
       updatedAt
       __typename

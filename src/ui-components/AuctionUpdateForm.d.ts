@@ -25,7 +25,7 @@ export declare type AuctionUpdateFormInputValues = {
     make?: string;
     model?: string;
     year?: number;
-    type?: string;
+    carId?: string;
     currentBid?: number;
     endTime?: string;
     status?: string;
@@ -33,12 +33,13 @@ export declare type AuctionUpdateFormInputValues = {
     player?: string;
     buy?: number;
     minBid?: number;
+    type?: string;
 };
 export declare type AuctionUpdateFormValidationValues = {
     make?: ValidationFunction<string>;
     model?: ValidationFunction<string>;
     year?: ValidationFunction<number>;
-    type?: ValidationFunction<string>;
+    carId?: ValidationFunction<string>;
     currentBid?: ValidationFunction<number>;
     endTime?: ValidationFunction<string>;
     status?: ValidationFunction<string>;
@@ -46,6 +47,7 @@ export declare type AuctionUpdateFormValidationValues = {
     player?: ValidationFunction<string>;
     buy?: ValidationFunction<number>;
     minBid?: ValidationFunction<number>;
+    type?: ValidationFunction<string>;
 };
 export declare type PrimitiveOverrideProps<T> = Partial<T> & React.DOMAttributes<HTMLDivElement>;
 export declare type AuctionUpdateFormOverridesProps = {
@@ -53,7 +55,7 @@ export declare type AuctionUpdateFormOverridesProps = {
     make?: PrimitiveOverrideProps<TextFieldProps>;
     model?: PrimitiveOverrideProps<TextFieldProps>;
     year?: PrimitiveOverrideProps<TextFieldProps>;
-    type?: PrimitiveOverrideProps<TextFieldProps>;
+    carId?: PrimitiveOverrideProps<TextFieldProps>;
     currentBid?: PrimitiveOverrideProps<TextFieldProps>;
     endTime?: PrimitiveOverrideProps<TextFieldProps>;
     status?: PrimitiveOverrideProps<TextFieldProps>;
@@ -61,6 +63,7 @@ export declare type AuctionUpdateFormOverridesProps = {
     player?: PrimitiveOverrideProps<TextFieldProps>;
     buy?: PrimitiveOverrideProps<TextFieldProps>;
     minBid?: PrimitiveOverrideProps<TextFieldProps>;
+    type?: PrimitiveOverrideProps<TextFieldProps>;
 } & EscapeHatchProps;
 export declare type AuctionUpdateFormProps = React.PropsWithChildren<{
     overrides?: AuctionUpdateFormOverridesProps | undefined | null;

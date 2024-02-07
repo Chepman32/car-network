@@ -78,11 +78,12 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
       model: selectedCar.model,
       year: selectedCar.year,
       type: selectedCar.type,
+      carId: selectedCar.id,
       endTime,
       status: 'Active',
       lastBidPlayer: '',
       player: playerInfo.nickname,
-      buy,
+      buy: selectedCar.price,
       minBid,
     };
 
@@ -125,7 +126,7 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
   return (
     <div style={{ padding: '20px' }}>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: "wrap" }}>
-        {cars.length ? cars.map((car) => (
+        {cars && cars.length ? cars.map((car) => (
           <CarCard
             selectedCar={selectedCar}
             setSelectedCar={setSelectedCar}
@@ -148,21 +149,22 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
           setNewAuctionVisible(true)
         }}
       />
+      {newAuctionvisible && selectedCar &&
       <NewAuctionModal
-        visible={newAuctionvisible}
-        handleCancel={cancelNewAuction}
-        handleOk={createNewAuction}
-        form={form}
-        minBid={minBid}
-        setMinBid={setMinBid}
-        buy={buy}
-        setBuy={setBuy}
-        auctionDuration={auctionDuration}
-        setAuctionDuration={setAuctionDuration}
-        userCars={cars}
-        setSelectedCar={setSelectedCar}
-        selectedCar={selectedCar}
-      />
+      visible={newAuctionvisible}
+      handleCancel={cancelNewAuction}
+      handleOk={createNewAuction}
+      form={form}
+      minBid={minBid}
+      setMinBid={setMinBid}
+      buy={buy}
+      setBuy={setBuy}
+      auctionDuration={auctionDuration}
+      setAuctionDuration={setAuctionDuration}
+      userCars={cars}
+      setSelectedCar={setSelectedCar}
+      selectedCar={selectedCar}
+    />}
     </div>
   );
 };

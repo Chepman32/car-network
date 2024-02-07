@@ -5,7 +5,7 @@ import { List, Form, Input, Button, Card, Col, Row, Typography, Flex, Select, me
 import { generateClient } from 'aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import { listAuctions as listAuctionsQuery } from '../../graphql/queries';
-import { calculateTimeDifference, fetchUserCarsRequest } from "../../functions";
+import { calculateTimeDifference, createNewUserCar, fetchUserCarsRequest } from "../../functions";
 import AuctionPageItem from "./AuctionPageItem";
 import { SelectedAuctionDetails } from "./SelectedAuctionDetails";
 import AuctionActionsModal from "./AuctionActionsModal";
@@ -114,49 +114,65 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
   
   const buyItem = async () => {
     try {
-      setLoadingBuy(true);
-  
-      const increasedBidValue = Math.round(selectedAuction.currentBid * 1.1) || Math.round(selectedAuction.minBid * 1.1);
-  
-      const updatedAuction = {
-        ...selectedAuction,
-        currentBid: selectedAuction.buy,
-        lastBidPlayer: playerInfo.nickname,
-        status: "Finished",
-      };
-  
-      setMoney((prevMoney) => {
-        const bidDifference = selectedAuction.lastBidPlayer === playerInfo.nickname
-          ? selectedAuction.buy - selectedAuction.currentBid
-          : increasedBidValue;
-        
-        return prevMoney - bidDifference;
-      });
-  
-      await Promise.all([
-        client.graphql({
-          query: mutations.updateAuction,
-          variables: { input: updatedAuction },
-        }),
-        client.graphql({
-          query: mutations.updateUser,
-          variables: {
+        setLoadingBuy(true);
+
+        const increasedBidValue = Math.round(selectedAuction.currentBid * 1.1) || Math.round(selectedAuction.minBid * 1.1);
+
+        const updatedAuction = {
             input: {
-              id: playerInfo.id,
-              money: selectedAuction.lastBidPlayer === playerInfo.nickname ? money - (selectedAuction.buy - selectedAuction.currentBid) : money - increasedBidValue
-            },
-          },
-        }),
-      ]);
-  
-      message.success('Car successfully bought!');
-      listAuctions();
+                id: selectedAuction.id,
+                make: selectedAuction.make,
+                model: selectedAuction.model,
+                year: selectedAuction.year,
+                carId: selectedAuction.carId,
+                currentBid: selectedAuction.buy, // Set currentBid to the buy value
+                endTime: selectedAuction.endTime,
+                status: "Finished",
+                lastBidPlayer: playerInfo.nickname,
+                player: selectedAuction.player,
+                buy: selectedAuction.buy, // Set buy to the same buy value
+                minBid: selectedAuction.minBid,
+                type: selectedAuction.type
+            }
+        };
+
+        setMoney(prevMoney => {
+            const bidDifference =
+                selectedAuction.lastBidPlayer === playerInfo.nickname
+                    ? selectedAuction.buy - selectedAuction.currentBid
+                    : increasedBidValue;
+
+            return prevMoney - bidDifference;
+        });
+
+        await Promise.all([
+            client.graphql({
+                query: mutations.updateAuction,
+                variables: updatedAuction,
+            }),
+            client.graphql({
+                query: mutations.updateUser,
+                variables: {
+                    input: {
+                        id: playerInfo.id,
+                        money:
+                            selectedAuction.lastBidPlayer === playerInfo.nickname
+                                ? money - (selectedAuction.buy - selectedAuction.currentBid)
+                                : money - increasedBidValue,
+                    },
+                },
+            }),
+        ]);
+        createNewUserCar(playerInfo.id, selectedAuction.carId);
+        message.success('Car successfully bought!');
+        listAuctions();
     } catch (error) {
-      console.error(error);
+        console.error(error);
     } finally {
-      setLoadingBuy(false);
+        setLoadingBuy(false);
     }
-  };
+};
+
   
 
   const listener = async (data) => {

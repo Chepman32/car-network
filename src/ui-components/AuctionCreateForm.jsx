@@ -26,7 +26,7 @@ export default function AuctionCreateForm(props) {
     make: "",
     model: "",
     year: "",
-    type: "",
+    carId: "",
     currentBid: "",
     endTime: "",
     status: "",
@@ -34,11 +34,12 @@ export default function AuctionCreateForm(props) {
     player: "",
     buy: "",
     minBid: "",
+    type: "",
   };
   const [make, setMake] = React.useState(initialValues.make);
   const [model, setModel] = React.useState(initialValues.model);
   const [year, setYear] = React.useState(initialValues.year);
-  const [type, setType] = React.useState(initialValues.type);
+  const [carId, setCarId] = React.useState(initialValues.carId);
   const [currentBid, setCurrentBid] = React.useState(initialValues.currentBid);
   const [endTime, setEndTime] = React.useState(initialValues.endTime);
   const [status, setStatus] = React.useState(initialValues.status);
@@ -48,12 +49,13 @@ export default function AuctionCreateForm(props) {
   const [player, setPlayer] = React.useState(initialValues.player);
   const [buy, setBuy] = React.useState(initialValues.buy);
   const [minBid, setMinBid] = React.useState(initialValues.minBid);
+  const [type, setType] = React.useState(initialValues.type);
   const [errors, setErrors] = React.useState({});
   const resetStateValues = () => {
     setMake(initialValues.make);
     setModel(initialValues.model);
     setYear(initialValues.year);
-    setType(initialValues.type);
+    setCarId(initialValues.carId);
     setCurrentBid(initialValues.currentBid);
     setEndTime(initialValues.endTime);
     setStatus(initialValues.status);
@@ -61,13 +63,14 @@ export default function AuctionCreateForm(props) {
     setPlayer(initialValues.player);
     setBuy(initialValues.buy);
     setMinBid(initialValues.minBid);
+    setType(initialValues.type);
     setErrors({});
   };
   const validations = {
     make: [{ type: "Required" }],
     model: [{ type: "Required" }],
     year: [],
-    type: [{ type: "Required" }],
+    carId: [],
     currentBid: [],
     endTime: [{ type: "Required" }],
     status: [{ type: "Required" }],
@@ -75,6 +78,7 @@ export default function AuctionCreateForm(props) {
     player: [{ type: "Required" }],
     buy: [{ type: "Required" }],
     minBid: [{ type: "Required" }],
+    type: [{ type: "Required" }],
   };
   const runValidationTasks = async (
     fieldName,
@@ -105,7 +109,7 @@ export default function AuctionCreateForm(props) {
           make,
           model,
           year,
-          type,
+          carId,
           currentBid,
           endTime,
           status,
@@ -113,6 +117,7 @@ export default function AuctionCreateForm(props) {
           player,
           buy,
           minBid,
+          type,
         };
         const validationResponses = await Promise.all(
           Object.keys(validations).reduce((promises, fieldName) => {
@@ -178,7 +183,7 @@ export default function AuctionCreateForm(props) {
               make: value,
               model,
               year,
-              type,
+              carId,
               currentBid,
               endTime,
               status,
@@ -186,6 +191,7 @@ export default function AuctionCreateForm(props) {
               player,
               buy,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.make ?? value;
@@ -212,7 +218,7 @@ export default function AuctionCreateForm(props) {
               make,
               model: value,
               year,
-              type,
+              carId,
               currentBid,
               endTime,
               status,
@@ -220,6 +226,7 @@ export default function AuctionCreateForm(props) {
               player,
               buy,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.model ?? value;
@@ -250,7 +257,7 @@ export default function AuctionCreateForm(props) {
               make,
               model,
               year: value,
-              type,
+              carId,
               currentBid,
               endTime,
               status,
@@ -258,6 +265,7 @@ export default function AuctionCreateForm(props) {
               player,
               buy,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.year ?? value;
@@ -273,10 +281,10 @@ export default function AuctionCreateForm(props) {
         {...getOverrideProps(overrides, "year")}
       ></TextField>
       <TextField
-        label="Type"
-        isRequired={true}
+        label="Car id"
+        isRequired={false}
         isReadOnly={false}
-        value={type}
+        value={carId}
         onChange={(e) => {
           let { value } = e.target;
           if (onChange) {
@@ -284,7 +292,7 @@ export default function AuctionCreateForm(props) {
               make,
               model,
               year,
-              type: value,
+              carId: value,
               currentBid,
               endTime,
               status,
@@ -292,19 +300,20 @@ export default function AuctionCreateForm(props) {
               player,
               buy,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
-            value = result?.type ?? value;
+            value = result?.carId ?? value;
           }
-          if (errors.type?.hasError) {
-            runValidationTasks("type", value);
+          if (errors.carId?.hasError) {
+            runValidationTasks("carId", value);
           }
-          setType(value);
+          setCarId(value);
         }}
-        onBlur={() => runValidationTasks("type", type)}
-        errorMessage={errors.type?.errorMessage}
-        hasError={errors.type?.hasError}
-        {...getOverrideProps(overrides, "type")}
+        onBlur={() => runValidationTasks("carId", carId)}
+        errorMessage={errors.carId?.errorMessage}
+        hasError={errors.carId?.hasError}
+        {...getOverrideProps(overrides, "carId")}
       ></TextField>
       <TextField
         label="Current bid"
@@ -322,7 +331,7 @@ export default function AuctionCreateForm(props) {
               make,
               model,
               year,
-              type,
+              carId,
               currentBid: value,
               endTime,
               status,
@@ -330,6 +339,7 @@ export default function AuctionCreateForm(props) {
               player,
               buy,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.currentBid ?? value;
@@ -356,7 +366,7 @@ export default function AuctionCreateForm(props) {
               make,
               model,
               year,
-              type,
+              carId,
               currentBid,
               endTime: value,
               status,
@@ -364,6 +374,7 @@ export default function AuctionCreateForm(props) {
               player,
               buy,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.endTime ?? value;
@@ -390,7 +401,7 @@ export default function AuctionCreateForm(props) {
               make,
               model,
               year,
-              type,
+              carId,
               currentBid,
               endTime,
               status: value,
@@ -398,6 +409,7 @@ export default function AuctionCreateForm(props) {
               player,
               buy,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.status ?? value;
@@ -424,7 +436,7 @@ export default function AuctionCreateForm(props) {
               make,
               model,
               year,
-              type,
+              carId,
               currentBid,
               endTime,
               status,
@@ -432,6 +444,7 @@ export default function AuctionCreateForm(props) {
               player,
               buy,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.lastBidPlayer ?? value;
@@ -458,7 +471,7 @@ export default function AuctionCreateForm(props) {
               make,
               model,
               year,
-              type,
+              carId,
               currentBid,
               endTime,
               status,
@@ -466,6 +479,7 @@ export default function AuctionCreateForm(props) {
               player: value,
               buy,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.player ?? value;
@@ -496,7 +510,7 @@ export default function AuctionCreateForm(props) {
               make,
               model,
               year,
-              type,
+              carId,
               currentBid,
               endTime,
               status,
@@ -504,6 +518,7 @@ export default function AuctionCreateForm(props) {
               player,
               buy: value,
               minBid,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.buy ?? value;
@@ -534,7 +549,7 @@ export default function AuctionCreateForm(props) {
               make,
               model,
               year,
-              type,
+              carId,
               currentBid,
               endTime,
               status,
@@ -542,6 +557,7 @@ export default function AuctionCreateForm(props) {
               player,
               buy,
               minBid: value,
+              type,
             };
             const result = onChange(modelFields);
             value = result?.minBid ?? value;
@@ -555,6 +571,41 @@ export default function AuctionCreateForm(props) {
         errorMessage={errors.minBid?.errorMessage}
         hasError={errors.minBid?.hasError}
         {...getOverrideProps(overrides, "minBid")}
+      ></TextField>
+      <TextField
+        label="Type"
+        isRequired={true}
+        isReadOnly={false}
+        value={type}
+        onChange={(e) => {
+          let { value } = e.target;
+          if (onChange) {
+            const modelFields = {
+              make,
+              model,
+              year,
+              carId,
+              currentBid,
+              endTime,
+              status,
+              lastBidPlayer,
+              player,
+              buy,
+              minBid,
+              type: value,
+            };
+            const result = onChange(modelFields);
+            value = result?.type ?? value;
+          }
+          if (errors.type?.hasError) {
+            runValidationTasks("type", value);
+          }
+          setType(value);
+        }}
+        onBlur={() => runValidationTasks("type", type)}
+        errorMessage={errors.type?.errorMessage}
+        hasError={errors.type?.hasError}
+        {...getOverrideProps(overrides, "type")}
       ></TextField>
       <Flex
         justifyContent="space-between"

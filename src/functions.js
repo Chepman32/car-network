@@ -18,6 +18,7 @@ export const fetchUserCarsRequest = async (id) => {
                   model
                   year
                   type
+                  price
                 }
               }
             }
@@ -53,9 +54,21 @@ export function calculateTimeDifference(targetTime) {
   }
 }
 
+export const createNewUserCar = async (userId, carId) => {
+  await client.graphql({
+    query: mutations.createUserCar,
+    variables: {
+      input: {
+        userId,
+        carId,
+      },
+    },
+  });
+}
+
 export async function getUserCar(userId, carId) {
   const userCarData = await client.graphql({
-    query: queries.listUserCars, // Replace with your actual list query
+    query: queries.listUserCars,
     variables: {
       filter: {
         userId: { eq: userId },

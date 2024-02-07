@@ -21,7 +21,7 @@ export default function NewAuctionModal({ visible, handleCancel, handleOk, selec
           <Input type="number" defaultValue={0} value={minBid} onChange={(event) => setMinBid(event.target.value)} />
         </Form.Item>
         <Form.Item name="buy" label="Buy" rules={[{ required: true }]}>
-          <Input type="number" defaultValue={30} value={buy} onChange={(event) => setBuy(event.target.value)}/>
+          <Input type="number" defaultValue={selectedCar.price} value={selectedCar.price} onChange={(event) => setBuy(event.target.value)} disabled />
         </Form.Item>
         <Form.Item name="auctionDuration" label="Auction Duration (hours)" rules={[{ required: true }]}>
           <Select value={auctionDuration} onChange={(value) => setAuctionDuration(value)} >
