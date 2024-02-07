@@ -19,9 +19,11 @@ const CarDetailsModal = ({ visible, handleCancel, selectedCar, buyCar, loadingNe
       onCancel={handleCancel}
       footer={null}
     >
-          <div className="carDetailsModal__row" onClick={() => {
-              buyCar(selectedCar)
-      }} >{loadingBuy ? <Spin/> : "Buy"} </div>
+      {
+        !forAuction && <div className="carDetailsModal__row" onClick={() => {
+          buyCar(selectedCar)
+  }} >{loadingBuy ? <Spin/> : "Buy"} </div>
+          }
       <div className="carDetailsModal__row">Add to favorites</div>
       {
         forAuction && <div className="carDetailsModal__row" onClick={showNewAuction} >{loadingNewAuction ? <Spin/> : "Sell on auction"} </div>
