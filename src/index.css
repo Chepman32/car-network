@@ -24,7 +24,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.auctionHub__cardText {
+  font-size: 6vh;
+  font-family: BebasNeue-Regular;
+  color: #fff;
+  font-weight: 400;
+}
+
+.auctionHub__cardText_black {
+  font-size: 6vh;
+  font-family: BebasNeue-Regular;
+  color: #fff;
+  font-weight: 400;
+  color: #000;
 }

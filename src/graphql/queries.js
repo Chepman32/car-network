@@ -11,6 +11,10 @@ export const getUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      auctions {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -53,6 +57,10 @@ export const getAuction = /* GraphQL */ `
       buy
       minBid
       type
+      user {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -229,6 +237,120 @@ export const userCarsByCarId = /* GraphQL */ `
         id
         userId
         carId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const getAuctionUser = /* GraphQL */ `
+  query GetAuctionUser($id: ID!) {
+    getAuctionUser(id: $id) {
+      id
+      userId
+      auctionId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      auction {
+        id
+        make
+        model
+        year
+        carId
+        currentBid
+        endTime
+        status
+        lastBidPlayer
+        player
+        buy
+        minBid
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const listAuctionUsers = /* GraphQL */ `
+  query ListAuctionUsers(
+    $filter: ModelAuctionUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    listAuctionUsers(filter: $filter, limit: $limit, nextToken: $nextToken) {
+      items {
+        id
+        userId
+        auctionId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const auctionUsersByUserId = /* GraphQL */ `
+  query AuctionUsersByUserId(
+    $userId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAuctionUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    auctionUsersByUserId(
+      userId: $userId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        auctionId
+        createdAt
+        updatedAt
+        __typename
+      }
+      nextToken
+      __typename
+    }
+  }
+`;
+export const auctionUsersByAuctionId = /* GraphQL */ `
+  query AuctionUsersByAuctionId(
+    $auctionId: ID!
+    $sortDirection: ModelSortDirection
+    $filter: ModelAuctionUserFilterInput
+    $limit: Int
+    $nextToken: String
+  ) {
+    auctionUsersByAuctionId(
+      auctionId: $auctionId
+      sortDirection: $sortDirection
+      filter: $filter
+      limit: $limit
+      nextToken: $nextToken
+    ) {
+      items {
+        id
+        userId
+        auctionId
         createdAt
         updatedAt
         __typename

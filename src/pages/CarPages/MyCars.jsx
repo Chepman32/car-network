@@ -6,7 +6,7 @@ import * as mutations from '../../graphql/mutations';
 import "./carsPage.css";
 import CarDetailsModal from "./CarDetailsModal";
 import CarCard from "./CarCard";
-import { fetchUserCarsRequest, getUserCar, deleteUserCar } from "../../functions";
+import { fetchUserCarsRequest, getUserCar, deleteUserCar, createNewAuctionUser } from "../../functions";
 import NewAuctionModal from "../AuctionPage/NewAuctionModal";
 
 const client = generateClient();
@@ -88,22 +88,31 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
     };
 
     try {
-      setLoadingNewAuction(true)
-      selectedCar && await deleteUserCar(await getUserCar(playerInfo.id, selectedCar.id))
+      setLoadingNewAuction(true);
+      selectedCar && await deleteUserCar(await getUserCar(playerInfo.id, selectedCar.id));
       const result = await client.graphql({
         query: mutations.createAuction,
         variables: {
           input: newAuction,
         },
       });
-      message.success('Auction created successfully!');
+    
+      const createdAuctionId = result?.data?.createAuction?.id; // Access the ID from the createAuction result
+    
+      if (createdAuctionId) {
+        const createdAuctionUser = await createNewAuctionUser(playerInfo.id, createdAuctionId); // Use the retrieved ID
+        console.log('Created auction user:', createdAuctionUser);
+        message.success('Auction created successfully!');
+      } else {
+        throw new Error('Failed to retrieve the ID of the created auction.');
+      }
     } catch (error) {
-      console.log('Error creating auction:', error);
-    }
-    finally {
-      setLoadingNewAuction(false)
+      console.error('Error creating auction:', error);
+    } finally {
+      setLoadingNewAuction(false);
       setNewAuctionVisible(false);
     }
+    
   };
 
   const showCarDetailsModal = () => {

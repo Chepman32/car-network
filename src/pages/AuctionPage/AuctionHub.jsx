@@ -1,7 +1,10 @@
-import React, { useState, useEffect, useCallback } from "react";
-import "@aws-amplify/ui-react/styles.css";
-import { List, Form, Input, Button, Card, Col, Row, Typography, Flex, Select, message, Spin, Space } from "antd";
+import React from "react";
+import { Card, Col, Row, Typography } from "antd";
 import { Link } from "react-router-dom";
+import "./auctionPage.css"
+import AuctionHubMyBids from "./AuctionHubCards/AuctionHubMyBids";
+import AuctionHubMyAuctions from "./AuctionHubCards/AuctionHubMyAuctions";
+import AuctionHubStart from "./AuctionHubCards/AuctionHubStart";
 
 export default function AuctionsHub() {
 
@@ -10,38 +13,18 @@ export default function AuctionsHub() {
           <Row style={{ height: '85vh', margin: '0', padding: '20px', boxSizing: 'border-box' }}>
       <Col span={12} style={{ height: '100%' }}>
                   <Link to="/auctions">
-                  <Card style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          Find auctions
+                  <Card style={{ height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: "url(https://www.gtplanet.net/wp-content/uploads/2023/12/Forza-Horizon-5-Playlist-Cars.jpg)" }}>
+                  <Typography.Text className="auctionHub__cardText">
+                  Search auctions
+            </Typography.Text>
         </Card>
       </Link>
       </Col>
       <Col span={12} style={{ height: '100%' }}>
-                  <Link to="/myCars">
-                  <Row style={{ height: '50%' }}>
-          <Card style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            Start auction
-          </Card>
-        </Row>
-      </Link>
-                  <Link to="/myBids">
-                  <Row style={{ height: '25%' }}>
-          <Card style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            My bids
-          </Card>
-        </Row>
-      </Link>
-                  <Link to="/myAuctions">
-                  <Row style={{ height: '25%' }}>
-          <Card style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            My auctions
-          </Card>
-        </Row>
-      </Link>
-        <Row style={{ height: '10%' }}>
-          <Card style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            Auction notifications
-          </Card>
-        </Row>
+                  <AuctionHubStart/>
+                  <AuctionHubMyBids/>
+                  <AuctionHubMyAuctions/>
+        
       </Col>
     </Row>
     </div>

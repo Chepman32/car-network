@@ -3,6 +3,7 @@ type User @model @auth(rules: [{allow: public}]) {
   nickname: String
   money: Int
   cars: [Car] @manyToMany(relationName: "UserCar")
+  auctions: [Auction] @manyToMany(relationName: "AuctionUser")
 }
 
 type Auction @model @auth(rules: [{allow: public, operations: [read, create, update]}]) {
@@ -19,6 +20,7 @@ type Auction @model @auth(rules: [{allow: public, operations: [read, create, upd
   buy: Int!
   minBid: Int!
   type: String!
+  user: [User] @manyToMany(relationName: "AuctionUser")
 }
 
 type Car @model @auth(rules: [{allow: public}]) {

@@ -11,6 +11,10 @@ export const onCreateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      auctions {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -27,6 +31,10 @@ export const onUpdateUser = /* GraphQL */ `
         nextToken
         __typename
       }
+      auctions {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -40,6 +48,10 @@ export const onDeleteUser = /* GraphQL */ `
       nickname
       money
       cars {
+        nextToken
+        __typename
+      }
+      auctions {
         nextToken
         __typename
       }
@@ -65,6 +77,10 @@ export const onCreateAuction = /* GraphQL */ `
       buy
       minBid
       type
+      user {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -87,6 +103,10 @@ export const onUpdateAuction = /* GraphQL */ `
       buy
       minBid
       type
+      user {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -109,6 +129,10 @@ export const onDeleteAuction = /* GraphQL */ `
       buy
       minBid
       type
+      user {
+        nextToken
+        __typename
+      }
       createdAt
       updatedAt
       __typename
@@ -254,6 +278,126 @@ export const onDeleteUserCar = /* GraphQL */ `
         model
         year
         price
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onCreateAuctionUser = /* GraphQL */ `
+  subscription OnCreateAuctionUser(
+    $filter: ModelSubscriptionAuctionUserFilterInput
+  ) {
+    onCreateAuctionUser(filter: $filter) {
+      id
+      userId
+      auctionId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      auction {
+        id
+        make
+        model
+        year
+        carId
+        currentBid
+        endTime
+        status
+        lastBidPlayer
+        player
+        buy
+        minBid
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onUpdateAuctionUser = /* GraphQL */ `
+  subscription OnUpdateAuctionUser(
+    $filter: ModelSubscriptionAuctionUserFilterInput
+  ) {
+    onUpdateAuctionUser(filter: $filter) {
+      id
+      userId
+      auctionId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      auction {
+        id
+        make
+        model
+        year
+        carId
+        currentBid
+        endTime
+        status
+        lastBidPlayer
+        player
+        buy
+        minBid
+        type
+        createdAt
+        updatedAt
+        __typename
+      }
+      createdAt
+      updatedAt
+      __typename
+    }
+  }
+`;
+export const onDeleteAuctionUser = /* GraphQL */ `
+  subscription OnDeleteAuctionUser(
+    $filter: ModelSubscriptionAuctionUserFilterInput
+  ) {
+    onDeleteAuctionUser(filter: $filter) {
+      id
+      userId
+      auctionId
+      user {
+        id
+        nickname
+        money
+        createdAt
+        updatedAt
+        __typename
+      }
+      auction {
+        id
+        make
+        model
+        year
+        carId
+        currentBid
+        endTime
+        status
+        lastBidPlayer
+        player
+        buy
+        minBid
         type
         createdAt
         updatedAt

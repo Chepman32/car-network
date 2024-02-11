@@ -75,3 +75,15 @@
     font-size: 2vh;
     font-weight: 600;
   }
+
+  /* auctionPage.css */
+
+.auctionHub__card:hover {
+  border: 2px solid red;
+}
+
+
+  .auctionHub__cardText {
+    font-size: 6vh;
+    color: #fff;
+  }

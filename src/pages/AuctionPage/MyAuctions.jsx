@@ -3,9 +3,10 @@ import { Hub } from 'aws-amplify/utils';
 import "@aws-amplify/ui-react/styles.css";
 import { Form, Typography, Select, message } from "antd";
 import { generateClient } from 'aws-amplify/api';
+import * as queries from '../../graphql/queries';
 import * as mutations from '../../graphql/mutations';
 import { listAuctions as listAuctionsQuery } from '../../graphql/queries';
-import { calculateTimeDifference } from "../../functions";
+import { calculateTimeDifference, createNewUserCar, fetchAuctionUser } from "../../functions";
 import AuctionPageItem from "./AuctionPageItem";
 import { SelectedAuctionDetails } from "./SelectedAuctionDetails";
 import AuctionActionsModal from "./AuctionActionsModal";
@@ -101,50 +102,88 @@ export default function MyAuctions({ playerInfo, setMoney, money }) {
   };
   
   const buyItem = async () => {
+  
     try {
+  
       setLoadingBuy(true);
   
       const increasedBidValue = Math.round(selectedAuction.currentBid * 1.1) || Math.round(selectedAuction.minBid * 1.1);
+
+        const updatedAuctionInput = {
+            id: selectedAuction.id,
+            make: selectedAuction.make,
+            model: selectedAuction.model,
+            year: selectedAuction.year,
+            carId: selectedAuction.carId,
+            currentBid: selectedAuction.buy, // Set currentBid to the buy value
+            endTime: selectedAuction.endTime,
+            status: "Finished",
+            lastBidPlayer: playerInfo.nickname,
+            player: selectedAuction.player,
+            buy: selectedAuction.buy, // Set buy to the same buy value
+            minBid: selectedAuction.minBid,
+            type: selectedAuction.type
+        };
+
+        setMoney(prevMoney => {
+            const bidDifference =
+                selectedAuction.lastBidPlayer === playerInfo.nickname
+                    ? selectedAuction.buy - selectedAuction.currentBid
+                    : increasedBidValue;
+
+            return prevMoney - bidDifference;
+        });
+
+        const id = selectedAuction.id
   
-      const updatedAuction = {
-        ...selectedAuction,
-        currentBid: selectedAuction.buy,
-        lastBidPlayer: playerInfo.nickname,
-        status: "Finished",
-      };
+      const auctionUser = await fetchAuctionUser(playerInfo.id, id);
+      
+      console.log('Auction User:', auctionUser);
   
-      setMoney((prevMoney) => {
-        const bidDifference = selectedAuction.lastBidPlayer === playerInfo.nickname
-          ? selectedAuction.buy - selectedAuction.currentBid
-          : increasedBidValue;
-        
-        return prevMoney - bidDifference;
-      });
-  
-      await Promise.all([
-        client.graphql({
-          query: mutations.updateAuction,
-          variables: { input: updatedAuction },
-        }),
-        client.graphql({
-          query: mutations.updateUser,
-          variables: {
-            input: {
-              id: playerInfo.id,
-              money: selectedAuction.lastBidPlayer === playerInfo.nickname ? money - (selectedAuction.buy - selectedAuction.currentBid) : money - increasedBidValue
-            },
-          },
-        }),
-      ]);
-  
-      message.success('Car successfully bought!');
-      listAuctions();
+
+        await Promise.all([
+            client.graphql({
+                query: mutations.updateAuction,
+                variables: { input: updatedAuctionInput },
+            }),
+            client.graphql({
+                query: mutations.updateUser,
+                variables: {
+                    input: {
+                        id: playerInfo.id,
+                        money:
+                            selectedAuction.lastBidPlayer === playerInfo.nickname
+                                ? money - (selectedAuction.buy - selectedAuction.currentBid)
+                                : money - increasedBidValue,
+                    },
+                },
+            }),
+            auctionUser && client.graphql({
+                query: mutations.updateUser,
+                variables: {
+                    input: {
+                        id: auctionUser.id,
+                        money: auctionUser.money + selectedAuction.buy,
+                    },
+                },
+            }),
+        ]);
+        createNewUserCar(playerInfo.id, selectedAuction.carId);
+        message.success('Car successfully bought!');
+        listAuctions();
     } catch (error) {
+
       console.error(error);
+    
     } finally {
+  
       setLoadingBuy(false);
+    
     }
+  
   };
+
+
   
 
   const listener = async (data) => {
@@ -186,7 +225,6 @@ export default function MyAuctions({ playerInfo, setMoney, money }) {
   return (
     <div style={{ display: 'flex', padding: '20px' }}>
       <div style={{ flex: 1 }}>
-        <Typography.Title level={1} style={{ textAlign: 'center' }}>Virtual Car Auction</Typography.Title>
         <div className="auction-items-container">
           {auctions.map((auction) => (
             <AuctionPageItem

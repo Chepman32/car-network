@@ -54,12 +54,15 @@ export default function App() {
       nickname: username,
       money: 1000,
     };
-    await client.graphql({
-      query: createUser,
-      variables: { input: data }
-    });
+    setTimeout(async () => {
+      !creatingUser && !playerInfo ? await client.graphql({
+        query: createUser,
+        variables: { input: data }
+      }) : message.warning("User already exists");
+    }, 1000)
     setCreatingUser(false);
     setPlayerInfo(data)
+    setMoney(data.money)
     message.success("User successfully created");
   }
 
@@ -70,7 +73,9 @@ export default function App() {
     }
   };
 
-  Hub.listen("auth", listener)
+  useEffect(() => {
+    !money &&!nickname && !creatingUser && !playerInfo ? Hub.listen("auth", listener) : console.log(null)
+  }, [creatingUser, listener, money, nickname, playerInfo])
 
   return (
     <BrowserRouter>
@@ -161,7 +166,7 @@ export default function App() {
                         />
                       </Routes>
                       :
-                      <Spin fullscreen/>
+                      <Spin />
                   }
 
                 </main>

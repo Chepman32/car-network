@@ -187,7 +187,6 @@ export default function MyBids({ playerInfo, setMoney, money }) {
   return (
     <div style={{ display: 'flex', padding: '20px' }}>
       <div style={{ flex: 1 }}>
-        <Typography.Title level={1} style={{ textAlign: 'center' }}>Virtual Car Auction</Typography.Title>
         <div className="auction-items-container">
           {auctions.map((auction) => (
             <AuctionPageItem

@@ -90,3 +90,114 @@ export async function deleteUserCar(userCar) {
 
   return deletedData;
 }
+
+export const createNewAuctionUser = async (userId, auctionId) => {
+  try {
+    const result = await client.graphql({
+      query: mutations.createAuctionUser,
+      variables: {
+        input: {
+          userId,
+          auctionId,
+        },
+      },
+    });
+    return result.data.createAuctionUser; // Return the created auction user data
+  } catch (error) {
+    console.error('Error creating auction user:', error);
+    throw error; // Handle or propagate the error as needed
+  }
+};
+
+export const fetchAuctionUser = async (auctionId) => {
+  try {
+    const auctionUserData = await client.graphql({
+      query: queries.listAuctionUsers,
+      variables: {
+        filter: {
+          auctionId: { eq: auctionId }
+        }
+      }
+    });
+
+    const auctionUser = auctionUserData.data.listAuctionUsers.items[0];
+
+    if (!auctionUser) {
+      // Auction user not found
+      return null;
+    }
+
+    const userData = await client.graphql({
+      query: queries.getUser,
+      variables: {
+        id: auctionUser.userId  
+      }
+    });
+
+    const user = userData.data.getUser;
+    return user;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+export const increaseAuctionUserMoney = async (auctionUserId) => {
+
+  try {
+
+    // Get current user money
+    const userResult = await client.graphql({
+      query: queries.getUser,  
+      variables: {
+        id: auctionUserId
+      }
+    });
+    
+    const currentMoney = userResult.data.getUser.money;
+
+    // Calculate new money
+    const newMoney = currentMoney + 2000;
+
+    // Update user with new money
+    await client.graphql({
+      query: mutations.updateUser,
+      variables: {
+        input: {
+          id: auctionUserId,
+          money: newMoney
+        }
+      }
+    });
+
+    console.log("Increased auction user money by 2000!");
+
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+export async function getUserCreatedAuction(auctionId) {
+  try {
+    const auctionUserData = await client.graphql({
+      query: queries.getAuctionUser,
+      variables: {
+        id: auctionId
+      }
+    });
+
+    const auctionUser = auctionUserData.data.getAuctionUser;
+
+    if (!auctionUser) {
+      // Auction user not found
+      return null;
+    }
+
+    return auctionUser.userId;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
