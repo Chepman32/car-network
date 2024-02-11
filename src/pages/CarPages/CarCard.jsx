@@ -1,6 +1,7 @@
 import { Flex } from 'antd'
 import React from 'react'
 import "./carsPage.css";
+import { getCarTypeColor } from '../../functions';
 
 export default function CarCard({ selectedCar, setSelectedCar, showCarDetailsModal, car, getImageSource }) {
   return (
@@ -23,7 +24,7 @@ export default function CarCard({ selectedCar, setSelectedCar, showCarDetailsMod
               style={{ maxWidth: '100%', maxHeight: '50%', borderRadius: '10px' }}
             />
             <p>{car.price}</p>
-            <div className="carsPage__type">
+            <div className="carsPage__type" style={{background: getCarTypeColor(car.type)}} >
                 <p>{car.type.toUpperCase()}</p>
               </div>
           </div>

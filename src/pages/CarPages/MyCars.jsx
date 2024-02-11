@@ -31,43 +31,6 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
     fetchUserCars()
   }, [playerInfo.id, loadingNewAuction]);
 
-  const buyCar = async (car) => {
-    if (playerInfo && playerInfo.id) {
-      setMoney(money - car.price);
-      try {
-        setLoadingBuy(true);
-
-        await client.graphql({
-          query: mutations.updateUser,
-          variables: {
-            input: {
-              id: playerInfo.id,
-              money: money - car.price,
-            },
-          },
-        });
-
-        // Create a new user-car association
-        await client.graphql({
-          query: mutations.createUserCar,
-          variables: {
-            input: {
-              userId: playerInfo.id,
-              carId: car.id,
-            },
-          },
-        });
-        message.success('Car successfully bought!');
-      } catch (err) {
-        console.log(err);
-        message.error('Error buying car');
-      } finally {
-        setLoadingBuy(false);
-        setSelectedCar(null);
-      }
-    }
-  };
-
   const createNewAuction = async () => {
     const auctionDurationSeconds = auctionDuration * 60 * 60;
     const currentTimeInSeconds = Math.floor(Date.now() / 1000);
@@ -137,6 +100,7 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: "wrap" }}>
         {cars && cars.length ? cars.map((car) => (
           <CarCard
+          key={car.car.id}
             selectedCar={selectedCar}
             setSelectedCar={setSelectedCar}
             showCarDetailsModal={showCarDetailsModal}
@@ -150,8 +114,6 @@ const MyCars = ({ playerInfo, setMoney, money }) => {
         handleCancel={handleCarDetailsCancel}
         selectedCar={selectedCar}
         loadingNewAuction={loadingNewAuction}
-        buyCar={buyCar}
-        loadingBuy={loadingBuy}
         forAuction
         showNewAuction={() => {
           handleCarDetailsCancel()

@@ -5,7 +5,7 @@ import { List, Form, Input, Button, Card, Col, Row, Typography, Flex, Select, me
 import { generateClient } from 'aws-amplify/api';
 import * as mutations from '../../graphql/mutations';
 import { listAuctions as listAuctionsQuery } from '../../graphql/queries';
-import { calculateTimeDifference, createNewUserCar, fetchAuctionUser, fetchUserCarsRequest } from "../../functions";
+import { addUserToAuction, calculateTimeDifference, createNewUserCar, fetchAuctionUser, fetchUserCarsRequest } from "../../functions";
 import AuctionPageItem from "./AuctionPageItem";
 import { SelectedAuctionDetails } from "./SelectedAuctionDetails";
 import AuctionActionsModal from "./AuctionActionsModal";
@@ -75,8 +75,18 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
   const increaseBid = async (auction) => {
     try {
       setLoadingBid(true);
-      const increasedBidValue = Math.floor(auction.currentBid * 1.1) || Math.round(auction.minBid * 1.1)
-      setMoney(auction.lastBidPlayer === playerInfo.nickname ? money - (increasedBidValue - auction.currentBid) : money - increasedBidValue)
+      let increasedBidValue = Math.floor(auction.currentBid * 1.1) || Math.round(auction.minBid * 1.1);
+      if (increasedBidValue >= auction.buy) {
+        buyItem()
+        return
+      }
+      setMoney(auction.lastBidPlayer === playerInfo.nickname ? money - (increasedBidValue - auction.currentBid) : money - increasedBidValue);
+  
+      // Add the user to the bidderAuctions list
+      const userId = playerInfo.id;
+      const auctionId = auction.id;
+      await addUserToAuction(userId, auctionId);
+  
       const updatedAuction = {
         id: auction.id,
         carName: auction.carName,
@@ -88,10 +98,12 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
         lastBidPlayer: playerInfo.nickname,
         status: increasedBidValue < auction.buy ? "active" : "finished",
       };
+  
       await client.graphql({
         query: mutations.updateAuction,
         variables: { input: updatedAuction },
       });
+  
       await client.graphql({
         query: mutations.updateUser,
         variables: {
@@ -101,16 +113,18 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
           }
         },
       });
-      handleCancel()
+  
+      handleCancel();
       message.success('Bid successfully increased!');
-
       listAuctions();
     } catch (error) {
       console.error(error);
     } finally {
       setLoadingBid(false);
+      setAuctionActionsVisible(false)
     }
   };
+  
   
   const buyItem = async () => {
     try {
@@ -135,19 +149,19 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
         type: selectedAuction.type
       };
   
+      // Fetch auction user
+      const auctionUser = await fetchAuctionUser(selectedAuction.id); // Corrected here
+  
       // Calculate the money to be transferred
       const bidDifference =
         selectedAuction.lastBidPlayer === playerInfo.nickname
-          ? selectedAuction.buy - selectedAuction.currentBid
-          : increasedBidValue;
+        ? auctionUser.money - (selectedAuction.buy - selectedAuction.currentBid)
+        : auctionUser.money - selectedAuction.buy;
   
       // Decrease the buyer's money
-      setMoney(prevMoney => prevMoney - bidDifference);
-      const id = selectedAuction.id
-        const auctionUser = await fetchAuctionUser(id);
+      setMoney(bidDifference);
   
       // Increase the seller's money
-      console.log("auctionUser", auctionUser)
       await client.graphql({
         query: mutations.updateUser,
         variables: {
@@ -157,27 +171,22 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
           },
         },
       });
-      
   
       // Update the auction item and perform other necessary actions
       await Promise.all([
         client.graphql({
           query: mutations.updateUser,
           variables: {
-              input: {
-                  id: playerInfo.id,
-                  money:
-                      selectedAuction.lastBidPlayer === playerInfo.nickname
-                          ? money - (selectedAuction.buy - selectedAuction.currentBid)
-                          : money - increasedBidValue,
-              },
+            input: {
+              id: playerInfo.id,
+              money: bidDifference,
+            },
           },
-      }),
+        }),
         client.graphql({
           query: mutations.updateAuction,
           variables: { input: updatedAuctionInput },
         }),
-        // Other operations...
       ]);
   
       // Inform the user about the successful purchase
@@ -189,8 +198,10 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
       console.error(error);
     } finally {
       setLoadingBuy(false);
+      setAuctionActionsVisible(false)
     }
   };
+  
   
 
   

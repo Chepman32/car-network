@@ -34,6 +34,21 @@ export const fetchUserCarsRequest = async (id) => {
     console.error("Error fetching user's cars:", error);
   }
 }
+
+export const getCarTypeColor = (carType) => {
+  switch (carType) {
+    case "regular":
+      return "#32a852"
+    case "rare":
+      return "#397aab"
+      case "legendary":
+      return "#d4ca0f"
+      case "epic":
+      return "#4d1ac4"
+    default:
+      return "#32a852"
+  }
+}
   
 export function calculateTimeDifference(targetTime) {
   const targetDateTime = new Date(targetTime);
@@ -201,3 +216,20 @@ export async function getUserCreatedAuction(auctionId) {
     throw error;
   }
 }
+
+export const addUserToAuction = async (userId, auctionId) => {
+  try {
+    await client.graphql({
+      query: mutations.createAuctionUser,
+      variables: {
+        input: {
+          userId: userId,
+          auctionId: auctionId
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error adding user to auction:', error);
+    // Handle error or notify the user
+  }
+};
