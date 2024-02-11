@@ -23,6 +23,7 @@ export const SelectedAuctionDetails = ({ selectedAuction }) => {
                   className="auctionDetails_image"
                 />
               </div>
+              <Typography.Text className="subText" onClick={() => console.log(selectedAuction)} >{selectedAuction?.lastBidPlayer}</Typography.Text>
               <Flex direction="column" justify="space-between" align="center" style={{ flex: 1 }}>
               <Typography.Text className="subText">
                     {`${selectedAuction?.currentBid ? "Current" : "Start"} Bid: `}
