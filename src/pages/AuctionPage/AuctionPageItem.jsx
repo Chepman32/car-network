@@ -19,22 +19,26 @@ function CardTitle(auction) {
 export default function AuctionPageItem({ auction, isSelected, index, handleItemClick }) {
 
     return (
-        <Col className='auctionPageItem' span={24} style={{ height: '10%', width: '100%', display: 'flex' }} onClick={() => handleItemClick(auction)} >
-            <Card title={<ThinText>{auction.make}&nbsp;{auction.model} </ThinText>} style={{ width: "100%", flex: 1, border: isSelected ? '2px solid #ff69b4' : 'none' }}>
-                <div style={{ display: 'flex', flexDirection: "column", alignItems: "center" }}>
-                    <img
+        <Col className='auctionPageItem' span={24} style={{ height: '5%', width: '100%', display: 'flex' }} onClick={() => handleItemClick(auction)} >
+            <Flex align="flex-end" style={{width: "100%", paddingRight: "1vw", border: isSelected ? '2px solid #ff69b4' : 'none'}} >
+                <>
+                <img
                         src={getImageSource(auction.make, auction.model)}
                         alt="Auction"
                         style={{ width: 'auto', height: '10vw', objectFit: "contain", marginRight: '10px' }}
                     />
-                    <Space style={{width: "100%", display: "flex", justifyContent: "space-between"}}>
+                <div style={{height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
+                    <ThinText>{auction.make}&nbsp;{auction.model} </ThinText>
                         <Flex align="center">
                             <img src='https://static.thenounproject.com/png/1336726-200.png' className='hammer' alt=''/>
                             <Typography.Text className='subText'>
                                 {calculateTimeDifference(auction.endTime)}
                             </Typography.Text>
                         </Flex>
-                        <div style={{ display: 'flex', flexDirection: "column", alignItems: "flex-end" }}>
+                </div>
+                </>
+                <Flex>
+                <div style={{ display: 'flex', flexDirection: "column", alignItems: "flex-end" }}>
                             <Typography.Text className='subText'>
                                 {auction.currentBid > auction.minBid ? 'HIGHEST' : 'START'} BID
                             </Typography.Text>
@@ -46,9 +50,8 @@ export default function AuctionPageItem({ auction, isSelected, index, handleItem
                             <Typography.Text className='subText'>Buy out</Typography.Text>
                             <Typography.Text className='price'>{auction.buy}</Typography.Text>
                         </div>
-                    </Space>
-                </div>
-            </Card>
+                </Flex>
+                </Flex>
         </Col>
     );
 }
