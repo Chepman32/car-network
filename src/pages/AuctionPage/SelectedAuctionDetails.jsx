@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Space, Typography, Col, Flex } from "antd";
+import { calculateTimeDifference } from '../../functions';
 
 const getImageSource = (make, model) => {
   const imageName = `${make} ${model}.png`;
@@ -26,13 +27,16 @@ export const SelectedAuctionDetails = ({ selectedAuction }) => {
               <Typography.Text className="subText">{selectedAuction?.lastBidPlayer}</Typography.Text>
               <Space direction="vertical" style={{width: "50%",}}>
                 <div style={{width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-                  <Typography.Text className="subText">{`${selectedAuction?.currentBid ? "Current" : "Start"} Bid:`}&nbsp;</Typography.Text>
+                  <Typography.Text className="subText">{`${selectedAuction?.currentBid ? "Highest" : "Start"} Bid:`}&nbsp;</Typography.Text>
                   <Typography.Text className="price bid">{selectedAuction?.currentBid || selectedAuction.minBid}</Typography.Text>
                 </div>
                 <Space>
                   <Typography.Text className="subText">Buy out:</Typography.Text>
                   <Typography.Text className="price buy">{selectedAuction.buy}</Typography.Text>
                 </Space>
+                <Typography.Text className="time">
+                {calculateTimeDifference(selectedAuction.endTime)}
+                </Typography.Text>
               </Space>
             </Flex>
           </Card>

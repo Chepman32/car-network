@@ -16,10 +16,10 @@ function CardTitle(auction) {
 }
 
 
-export default function AuctionPageItem({ auction, isSelected, index, handleAuctionActionsShow }) {
+export default function AuctionPageItem({ auction, isSelected, index, handleItemClick }) {
 
     return (
-        <Col className='auctionPageItem' span={24} style={{ height: '10%', width: '100%', display: 'flex' }} onClick={handleAuctionActionsShow} >
+        <Col className='auctionPageItem' span={24} style={{ height: '10%', width: '100%', display: 'flex' }} onClick={() => handleItemClick(auction)} >
             <Card title={<ThinText>{auction.make}&nbsp;{auction.model} </ThinText>} style={{ width: "100%", flex: 1, border: isSelected ? '2px solid #ff69b4' : 'none' }}>
                 <div style={{ display: 'flex', flexDirection: "column", alignItems: "center" }}>
                     <img
@@ -36,7 +36,7 @@ export default function AuctionPageItem({ auction, isSelected, index, handleAuct
                         </Flex>
                         <div style={{ display: 'flex', flexDirection: "column", alignItems: "flex-end" }}>
                             <Typography.Text className='subText'>
-                                {auction.currentBid > auction.minBid ? 'CURRENT' : 'START'} BID
+                                {auction.currentBid > auction.minBid ? 'HIGHEST' : 'START'} BID
                             </Typography.Text>
                             <Typography.Text className='price' >
                                 {auction.currentBid || auction.minBid}

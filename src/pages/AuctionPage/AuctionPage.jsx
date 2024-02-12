@@ -42,10 +42,6 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
     fetchUserCars()
   }, [playerInfo.id]);
 
-  const showModal = () => {
-    setVisible(true);
-  };
-
   const handleCancel = () => {
     setVisible(false);
   };
@@ -237,8 +233,8 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
     };
   }, [auctions]);
 
-  const handleItemClick = (selectedAuction) => {
-    setSelectedAuction(selectedAuction);
+  const handleItemClick = (clickedAuction) => {
+    setSelectedAuction(clickedAuction);
     handleAuctionActionsShow();
   };
 

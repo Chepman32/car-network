@@ -38,3 +38,10 @@ body {
   font-weight: 400;
   color: #000;
 }
+
+.auctionDetails .time {
+  font-family: BebasNeue-Regular;
+  font-size: 3.5rem;
+  font-weight: 600;
+  color: #f8eb01;
+}

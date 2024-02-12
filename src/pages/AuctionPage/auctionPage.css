@@ -128,3 +128,9 @@
 .auctionDetails .buy {
   color: #f8eb01;
 }
+
+.auctionDetails .time {
+  font-size: 25px;
+  font-weight: 600;
+  color: #f8eb01;
+}
