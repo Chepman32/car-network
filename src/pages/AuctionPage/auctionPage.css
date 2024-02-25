@@ -1,7 +1,14 @@
+.auctionPage {
+  display: flex;
+  padding: 20px;
+  background: #d6d8a3;
+}
 .auctionPageItem {
   width: 100px;
   height: 10px;
   display: flex;
+  margin: 10px 0;
+  background: #fff;
 }
 .auctionDetails {
   max-height: 85vh;

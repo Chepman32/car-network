@@ -239,7 +239,7 @@ export default function AuctionPage({ playerInfo, setMoney, money }) {
   };
 
   return (
-    <div style={{ display: 'flex', padding: '20px' }}>
+    <div className="auctionPage" >
       <div style={{ flex: 1 }}>
         <div className="auction-items-container">
           {auctions.map((auction) => (
