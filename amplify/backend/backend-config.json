@@ -49,5 +49,30 @@
       "providerPlugin": "awscloudformation",
       "service": "Cognito"
     }
+  },
+  "function": {
+    "handleAuth": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_handleAuth_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "handleAuth"
+        }
+      ]
+    },
+    "AMPLIFY_function_handleAuth_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "handleAuth"
+        }
+      ]
+    }
   }
 }
