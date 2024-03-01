@@ -21,7 +21,7 @@
       "function": {
         "handleAuth": {
           "deploymentBucketName": "amplify-carnnetwork-dev-135442-deployment",
-          "s3Key": "amplify-builds/handleAuth-544e476965355a4e4854-build.zip"
+          "s3Key": "amplify-builds/handleAuth-7a356d686a466655654d-build.zip"
         }
       }
     }

@@ -24,6 +24,7 @@ Amplify.configure(awsExports);
 
 export default function App() {
   const [nickname, setNickname] = useState();
+  const [isNewUser, setIsNewUser] = useState(false)
   const [money, setMoney] = useState();
   const [playerInfo, setPlayerInfo] = useState(null);
   const [creatingUser, setCreatingUser] = useState(false);
@@ -36,6 +37,12 @@ export default function App() {
       });
       const playersList = playersData.data.listUsers.items;
       const user = playersList.find((u) => u.nickname === username);
+      const isNewUser = !playersList.some((pl) => pl.nickname === username)
+      setIsNewUser(isNewUser)
+      !user && createNewPlayer(username)
+      console.log("isNewUser", isNewUser)
+      console.log("userId", userId)
+      console.log("user", user.id)
       setPlayerInfo(user);
       setMoney(user.money)
     } catch (err) {
@@ -55,7 +62,7 @@ export default function App() {
       money: 1000,
     };
     setTimeout(async () => {
-      !creatingUser && !playerInfo ? await client.graphql({
+      isNewUser ? await client.graphql({
         query: createUser,
         variables: { input: data }
       }) : message.warning("User already exists");
@@ -65,17 +72,6 @@ export default function App() {
     setMoney(data.money)
     message.success("User successfully created");
   }
-
-  const listener = (data) => {
-    if (data.payload.event === "signedIn") {
-      setNickname(data?.payload?.data?.username);
-      createNewPlayer(data?.payload?.data?.username);
-    }
-  };
-
-  useEffect(() => {
-    !money &&!nickname && !creatingUser && !playerInfo ? Hub.listen("auth", listener) : console.log(null)
-  }, [creatingUser, listener, money, nickname, playerInfo])
 
   return (
     <BrowserRouter>
